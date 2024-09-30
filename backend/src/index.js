@@ -1,11 +1,11 @@
 const users = require("./modules/users");
 const auth = require("./modules/auth");
 const email = require("./modules/email");
-const projects = require("./modules/projects");
+const websites = require("./modules/websites");
 
 module.exports = {
   users,
   auth,
   email,
-  projects,
+  websites,
 };

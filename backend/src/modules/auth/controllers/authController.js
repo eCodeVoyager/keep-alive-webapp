@@ -26,12 +26,6 @@ const register = async (req, res, next) => {
     if (existingUser) {
       throw new ApiError(httpStatus.BAD_REQUEST, "User already exists");
     }
-    await userService.getUsers({ username: req.body.username }).then((user) => {
-      existingUser = user[0];
-    });
-    if (existingUser) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Username already exists");
-    }
 
     let user = await authService.register(req.body);
     await sendEmail(user.email, "Welcome", "welcome", {

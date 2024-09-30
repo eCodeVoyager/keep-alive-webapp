@@ -1,0 +1,116 @@
+const websiteService = require("../services/websiteService");
+const ApiResponse = require("../../../utils/apiResponse");
+const httpStatus = require("http-status");
+const { schedulePing } = require("../../../jobs/pingJob");
+const axios = require("axios");
+
+const addWebsite = async (req, res, next) => {
+  try {
+    const websiteData = req.body;
+    const isValid = await axios.get(websiteData.url);
+    if (isValid.status !== 200) {
+      return next(
+        new ApiError(httpStatus.BAD_REQUEST, "Invalid website URL provided")
+      );
+    }
+    const website = await websiteService.addWebsite({
+      ...websiteData,
+      owner: req.user.id,
+    });
+
+    schedulePing(website.owner, website.url, website.ping_time);
+    return res
+      .status(httpStatus.CREATED)
+      .json(
+        new ApiResponse(
+          httpStatus.CREATED,
+          website,
+          "Websites added successfully"
+        )
+      );
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getWebsites = async (req, res, next) => {
+  try {
+    const websites = await websiteService.getWebsites();
+    if (websites.length === 0) {
+      return next(new ApiError(httpStatus.NOT_FOUND, "No websites found"));
+    }
+    return res
+      .status(httpStatus.OK)
+      .json(
+        new ApiResponse(
+          httpStatus.OK,
+          websites,
+          "Websites retrieved successfully"
+        )
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getWebsite = async (req, res, next) => {
+  try {
+    const website = await websiteService.getWebsite(req.params.id);
+    return res.json(
+      new ApiResponse(httpStatus.OK, website, "Website retrieved successfully")
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateWebsite = async (req, res, next) => {
+  try {
+    const website = await websiteService.updateWebsite(req.params.id, req.body);
+    return res.json(
+      new ApiResponse(httpStatus.OK, website, "Website updated successfully")
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteWebsite = async (req, res, next) => {
+  try {
+    await websiteService.deleteWebsite(req.params.id);
+    return res.json(
+      new ApiResponse(httpStatus.OK, null, "Website deleted successfully")
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getLoggedInUserWebsites = async (req, res, next) => {
+  try {
+    const websites = await websiteService.getWebsites({ owner: req.user.id });
+    if (websites.length === 0) {
+      return next(new ApiError(httpStatus.NOT_FOUND, "No websites found"));
+    }
+    return res
+      .status(httpStatus.OK)
+      .json(
+        new ApiResponse(
+          httpStatus.OK,
+          websites,
+          "Websites retrieved successfully"
+        )
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  addWebsite,
+  getWebsites,
+  getWebsite,
+  updateWebsite,
+  deleteWebsite,
+  getLoggedInUserWebsites,
+};

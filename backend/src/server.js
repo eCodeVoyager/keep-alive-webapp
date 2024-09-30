@@ -2,11 +2,12 @@
 
 // Imports
 const app = require("./app");
-const ConnectDB = require("./config/db");
+const ConnectDB = require("./database/mongoDB");
 const server = require("http").createServer(app);
 const checkEnvVariables = require("./utils/envChecker");
 const processEmailJobs = require("./modules/email/services/emailWorker");
 const keepServerAlive = require("keep-alive-package");
+const { processPingJobs } = require("./jobs/pingJob");
 // Connect to Database
 ConnectDB();
 
@@ -15,6 +16,9 @@ checkEnvVariables();
 
 //Redis Proccess Jobs
 processEmailJobs();
+
+// Process Ping Jobs
+processPingJobs();
 
 keepServerAlive(process.env.BACKEND_SERVER_URL, "10m");
 

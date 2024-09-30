@@ -4,7 +4,6 @@ const Joi = require("joi");
 
 const register = {
   body: Joi.object().keys({
-    username: Joi.string().min(3).max(30).required(),
     email: Joi.string()
       .email({
         minDomainSegments: 2,

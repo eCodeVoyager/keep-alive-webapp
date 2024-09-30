@@ -6,13 +6,6 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 
 const userSchema = new mongoose.Schema(
   {
-    full_name: {
-      type: String,
-    },
-    username: {
-      type: String,
-      unique: true,
-    },
     email: {
       type: String,
       unique: true,
@@ -20,17 +13,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       select: false,
-    },
-    bio: {
-      type: String,
-    },
-    profile_image: {
-      type: String, // URL to the user's profile image
-    },
-    social_links: {
-      github: String,
-      linkedin: String,
-      twitter: String,
     },
     isVerified: {
       type: Boolean,

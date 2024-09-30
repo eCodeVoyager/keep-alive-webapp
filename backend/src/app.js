@@ -2,26 +2,33 @@
 
 require("dotenv").config();
 const hpp = require("hpp");
+const fs = require("fs");
+const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const express = require("express");
 const redis = require("./config/redis");
+const admin = require("./database/firebase");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 
-
 // Import routes and middlewares
-const { users, auth, projects } = require("./index");
+const { users, auth, websites } = require("./index");
 const { errorHandler, notFoundHandler } = require("./utils/errorHandler");
 
 // Load environment variables from .env file
 
 const app = express();
 
-// Keep server alive
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "logs", "app.log"),
+  {
+    flags: "a",
+  }
+);
 
 //Middlewares
 const allMiddlewares = [
@@ -53,7 +60,7 @@ app.get("/", (_, res) => {
 // Use routes
 app.use("/api/v1/auth", auth.authRoutes);
 app.use("/api/v1/users", users.userRoutes);
-app.use("/api/v1/projects", projects.projectRoutes);
+app.use("/api/v1/websites", websites.websiteRoutes);
 
 // Error handling middleware
 app.use(notFoundHandler);
