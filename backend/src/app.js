@@ -23,12 +23,12 @@ const { errorHandler, notFoundHandler } = require("./utils/errorHandler");
 
 const app = express();
 
-const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, "logs", "app.log"),
-  {
-    flags: "a",
-  }
-);
+// const accessLogStream = fs.createWriteStream(
+//   path.join(__dirname, "logs", "app.log"),
+//   {
+//     flags: "a",
+//   }
+// );
 
 //Middlewares
 const allMiddlewares = [
