@@ -1,4 +1,4 @@
-import React from "react";
+import { useContext, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Mail, Lock, Eye, EyeOff, Share2 } from "lucide-react";
@@ -7,6 +7,12 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "../components/Shared/Button";
 import Logo from "../components/Shared/Logo";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
+import authService from "../services/authService";
+import { routes } from "../router/routes.data";
+import cookies from "js-cookie";
+import { useEffect } from "react";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -15,17 +21,31 @@ const LoginSchema = Yup.object().shape({
 });
 
 const KeepAliveLoginForm = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = cookies.get("authToken");
+    if (token) {
+      navigate(routes.dashboard);
+    }
+  }, [navigate]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // Simulating API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      toast.success("Logged in successfully!");
-      // Handle successful login here
+      const response = await authService.login({
+        email: values.email,
+        password: values.password,
+      });
+      cookies.set("authToken", response.data.accessToken, {
+        expires: values.rememberMe ? 7 : undefined,
+      });
+      login(response.data.accessToken);
+      setSubmitting(false);
+      navigate(routes.dashboard);
     } catch (error) {
-      toast.error("Login failed. Please try again.");
-    } finally {
+      toast.error(error.response.data.message);
       setSubmitting(false);
     }
   };

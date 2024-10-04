@@ -14,7 +14,14 @@ const App = () => {
           <Route path={routes.hero} element={<Hero />} />
           <Route path={routes.login} element={<Login />} />
           <Route path={routes.register} element={<Register />} />
-          <Route path={routes.dashboard} element={<Dashboard />} />
+          <Route
+            path={routes.dashboard}
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Routes>
     </>

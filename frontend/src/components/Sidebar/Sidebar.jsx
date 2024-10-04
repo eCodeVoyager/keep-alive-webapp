@@ -19,7 +19,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => (
     <div className="flex items-center justify-between w-full px-4 mb-6">
       {isOpen && (
         <div className="flex gap-3 text-white font-bold text-2xl ">
-          <Logo size="10" iconSize="3" />
+          <Logo size={10} iconSize={3} />
           KeepAlive
         </div>
       )}

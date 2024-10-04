@@ -3,7 +3,7 @@ import Cookie from "js-cookie";
 import { routes } from "../../router/routes.data";
 import props from "prop-types";
 const ProtectedRoute = ({ children }) => {
-  const token = Cookie.get("authToken");
+  let token = Cookie.get("authToken");
   const location = useLocation();
   return token ? (
     children
