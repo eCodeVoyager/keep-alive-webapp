@@ -39,6 +39,9 @@ const ForgotPasswordReset = ({ email, onReset }) => {
     >
       {({ errors, touched, isSubmitting }) => (
         <Form className="space-y-6">
+          <p className="text-gray-400 text-center mb-4">
+            Enter your new password to reset your account
+          </p>
           <motion.div
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}

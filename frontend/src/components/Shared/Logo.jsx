@@ -3,7 +3,7 @@ import props from "prop-types";
 
 const Logo = ({ className = "", size, iconSize }) => {
   const finalSize = size || 16;
-  const finalIconSize = iconSize || 10;
+  const finalIconSize = iconSize || 11;
 
   return (
     <div

@@ -1,7 +1,7 @@
-
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Activity, Server, Users } from "lucide-react";
+import AnimatedLogo from "../components/Shared/AnimatedLogo";
 
 const Hero = () => {
   return (
@@ -12,13 +12,8 @@ const Hero = () => {
         transition={{ duration: 0.5 }}
         className="text-center"
       >
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="w-24 h-24 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-8"
-        >
-          <Activity className="w-16 h-16 text-white" />
-        </motion.div>
+        <AnimatedLogo />
+
         <h1 className="text-5xl font-bold text-white mb-4">Keep-Alive</h1>
         <p className="text-xl text-gray-300 mb-8">
           Ensure your servers stay active, always.

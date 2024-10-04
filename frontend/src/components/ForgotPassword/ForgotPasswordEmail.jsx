@@ -32,6 +32,9 @@ const ForgotPasswordEmail = ({ onSubmit }) => {
     >
       {({ errors, touched, isSubmitting }) => (
         <Form className="space-y-6">
+          <p className="text-gray-400 text-center mb-4">
+            Enter your email to receive a password reset link
+          </p>
           <motion.div
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
