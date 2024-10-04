@@ -1,8 +1,12 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Mail, Lock, Eye, EyeOff, Activity } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Share2 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { Button } from "../components/Shared/Button";
+import Logo from "../components/Shared/Logo";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -26,20 +30,60 @@ const KeepAliveLoginForm = () => {
     }
   };
 
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Keep-Alive Login",
+          text: "Check out Keep-Alive!",
+          url: window.location.href,
+        })
+        .then(() => {
+          console.log("Thanks for sharing!");
+        })
+        .catch(console.error);
+    } else {
+      toast.error("Web Share API not supported in your browser");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md">
-        <div className="flex items-center justify-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-            <Activity className="w-10 h-10 text-white" />
-          </div>
-        </div>
-        <h2 className="text-3xl font-bold text-white text-center mb-2">
+    <motion.div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md relative">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="absolute top-4 right-4 text-gray-400 hover:text-white"
+          onClick={handleShare}
+        >
+          <Share2 className="h-5 w-5" />
+        </motion.button>
+
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+          className="flex items-center justify-center mb-8"
+        >
+          <Logo />
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-3xl font-bold text-white text-center mb-2"
+        >
           Keep-Alive
-        </h2>
-        <p className="text-gray-400 text-center mb-6">
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-gray-400 text-center mb-6"
+        >
           Stay connected, stay active
-        </p>
+        </motion.p>
 
         <Formik
           initialValues={{ email: "", password: "", rememberMe: false }}
@@ -48,7 +92,12 @@ const KeepAliveLoginForm = () => {
         >
           {({ errors, touched, isSubmitting }) => (
             <Form className="space-y-6">
-              <div className="relative">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="relative"
+              >
                 <Field
                   id="email"
                   name="email"
@@ -62,9 +111,14 @@ const KeepAliveLoginForm = () => {
                     {errors.email}
                   </div>
                 ) : null}
-              </div>
+              </motion.div>
 
-              <div className="relative">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="relative"
+              >
                 <Field
                   id="password"
                   name="password"
@@ -73,7 +127,9 @@ const KeepAliveLoginForm = () => {
                   placeholder="Password"
                 />
                 <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3.5 text-gray-400 hover:text-white focus:outline-none"
@@ -83,15 +139,20 @@ const KeepAliveLoginForm = () => {
                   ) : (
                     <Eye className="h-5 w-5" />
                   )}
-                </button>
+                </motion.button>
                 {errors.password && touched.password ? (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.password}
                   </div>
                 ) : null}
-              </div>
+              </motion.div>
 
-              <div className="flex items-center justify-between">
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="flex items-center justify-between"
+              >
                 <div className="flex items-center">
                   <Field
                     id="rememberMe"
@@ -107,53 +168,39 @@ const KeepAliveLoginForm = () => {
                   </label>
                 </div>
                 <div className="text-sm">
-                  <a
-                    href="#"
+                  <Link
+                    to="/forgot-password"
                     className="font-medium text-green-400 hover:text-green-300"
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
-              </div>
+              </motion.div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.7 }}
               >
-                {isSubmitting ? (
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                ) : (
-                  "Sign in"
-                )}
-              </button>
+                <Button type="submit" isLoading={isSubmitting} fullWidth>
+                  Sign in
+                </Button>
+              </motion.div>
             </Form>
           )}
         </Formik>
 
-        <div className="mt-6 grid grid-cols-2 gap-3">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-6 grid grid-cols-2 gap-3"
+        >
           {["Google", "GitHub"].map((provider) => (
-            <button
+            <motion.button
               key={provider}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className="w-full inline-flex justify-center py-2 px-4 border border-gray-700 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"
             >
               {provider === "Google" ? (
@@ -172,21 +219,26 @@ const KeepAliveLoginForm = () => {
                 </svg>
               )}
               <span className="ml-2">{provider}</span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
-        <p className="mt-8 text-center text-sm text-gray-400">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+          className="mt-8 text-center text-sm text-gray-400"
+        >
           Don't have an account?{" "}
-          <a
-            href="#"
+          <Link
+            to="/register"
             className="font-medium text-green-400 hover:text-green-300"
           >
             Sign up now
-          </a>
-        </p>
+          </Link>
+        </motion.p>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

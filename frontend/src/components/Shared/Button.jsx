@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { ChevronRight } from "lucide-react";
 
 export const Button = ({
   children,
@@ -9,16 +10,13 @@ export const Button = ({
   ...props
 }) => {
   const baseClasses =
-    "flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white";
+    "flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text font-medium text-white";
   const gradientClasses =
     "bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600";
-  const focusClasses =
-    "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500";
 
   const classes = `
     ${baseClasses}
     ${gradientClasses}
-    ${focusClasses}
     ${fullWidth ? "w-full" : ""}
     ${className}
   `;
@@ -49,6 +47,7 @@ export const Button = ({
       ) : (
         children
       )}
+      {!isLoading && <ChevronRight />}
     </button>
   );
 };

@@ -1,52 +1,60 @@
+import PropTypes from "prop-types";
 import {
-  Activity,
   ChevronLeft,
   ChevronRight,
   Home,
+  Ticket,
   LogOut,
-  Server,
-  Settings,
+  Settings2,
 } from "lucide-react";
 import SidebarLink from "./SidebarLink";
-import props from "prop-types";
+import Logo from "../Shared/Logo";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => (
   <div
-    className={`fixed left-0 top-0 h-full bg-gray-800 flex flex-col items-center py-4 space-y-8 transition-all duration-300 ${
+    className={`fixed left-[20px] top-[2%] h-[96%] bg-gray-800 rounded-xl flex flex-col items-center py-4 transition-all duration-300 ${
       isOpen ? "w-64" : "w-16"
     }`}
   >
-    <div className="flex items-center justify-between w-full px-4">
-      <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-        <Activity className="w-8 h-8 text-white" />
-      </div>
+    <div className="flex items-center justify-between w-full px-4 mb-6">
+      {isOpen && (
+        <div className="flex gap-3 text-white font-bold text-2xl ">
+          <Logo size="10" iconSize="3" />
+          KeepAlive
+        </div>
+      )}
       <button
         onClick={toggleSidebar}
-        className="text-white hover:text-green-400"
+        className="text-gray-400 hover:text-white"
       >
         {isOpen ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
       </button>
     </div>
-    <nav className="flex-1 flex flex-col items-center space-y-4 w-full">
-      <SidebarLink icon={<Home size={24} />} label="Home" isOpen={isOpen} />
+
+    <nav className="flex-1 flex flex-col items-center space-y-2 w-full px-4">
       <SidebarLink
-        icon={<Server size={24} />}
-        label="Servers"
+        icon={<Home size={20} />}
+        label="Dashboard"
         isOpen={isOpen}
+        isActive={true}
       />
+      <SidebarLink icon={<Ticket size={20} />} label="Ticket" isOpen={isOpen} />
       <SidebarLink
-        icon={<Settings size={24} />}
+        icon={<Settings2 size={20} />}
         label="Settings"
         isOpen={isOpen}
       />
     </nav>
-    <SidebarLink icon={<LogOut size={24} />} label="Logout" isOpen={isOpen} />
+
+    <div className="w-full px-4 mt-auto">
+      <SidebarLink icon={<LogOut size={20} />} label="Logout" isOpen={isOpen} />
+    </div>
   </div>
 );
 
 Sidebar.propTypes = {
-  isOpen: props.bool.isRequired,
-  toggleSidebar: props.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  toggleSidebar: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

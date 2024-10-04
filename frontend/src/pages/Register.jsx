@@ -1,10 +1,12 @@
-import React from "react";
+import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Mail, Lock, Eye, EyeOff, Activity, User } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Activity, User, Share2 } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { Button } from "../components/Shared/Button";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Button } from "../components/Shared/Button";
+import Logo from "../components/Shared/Logo";
 
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -18,8 +20,8 @@ const RegisterSchema = Yup.object().shape({
 });
 
 const KeepAliveRegisterForm = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
@@ -28,26 +30,67 @@ const KeepAliveRegisterForm = () => {
       toast.success("Registration successful!");
       // Handle successful registration here
     } catch (error) {
+      console.error(error);
       toast.error("Registration failed. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Keep-Alive Registration",
+          text: "Join Keep-Alive!",
+          url: window.location.href,
+        })
+        .then(() => {
+          console.log("Thanks for sharing!");
+        })
+        .catch(console.error);
+    } else {
+      toast.error("Web Share API not supported in your browser");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md">
-        <div className="flex items-center justify-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-            <Activity className="w-10 h-10 text-white" />
-          </div>
-        </div>
-        <h2 className="text-3xl font-bold text-white text-center mb-2">
+    <motion.div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md relative">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="absolute top-4 right-4 text-gray-400 hover:text-white"
+          onClick={handleShare}
+        >
+          <Share2 className="h-5 w-5" />
+        </motion.button>
+
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+          className="flex items-center justify-center mb-8"
+        >
+          <Logo />
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-3xl font-bold text-white text-center mb-2"
+        >
           Join Keep-Alive
-        </h2>
-        <p className="text-gray-400 text-center mb-6">
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-gray-400 text-center mb-6"
+        >
           Create your account and start monitoring
-        </p>
+        </motion.p>
 
         <Formik
           initialValues={{
@@ -61,7 +104,12 @@ const KeepAliveRegisterForm = () => {
         >
           {({ errors, touched, isSubmitting }) => (
             <Form className="space-y-6">
-              <div className="relative">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="relative"
+              >
                 <Field
                   id="name"
                   name="name"
@@ -73,9 +121,14 @@ const KeepAliveRegisterForm = () => {
                 {errors.name && touched.name ? (
                   <div className="text-red-500 text-xs mt-1">{errors.name}</div>
                 ) : null}
-              </div>
+              </motion.div>
 
-              <div className="relative">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="relative"
+              >
                 <Field
                   id="email"
                   name="email"
@@ -89,9 +142,14 @@ const KeepAliveRegisterForm = () => {
                     {errors.email}
                   </div>
                 ) : null}
-              </div>
+              </motion.div>
 
-              <div className="relative">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="relative"
+              >
                 <Field
                   id="password"
                   name="password"
@@ -100,7 +158,9 @@ const KeepAliveRegisterForm = () => {
                   placeholder="Password"
                 />
                 <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3.5 text-gray-400 hover:text-white focus:outline-none"
@@ -110,15 +170,20 @@ const KeepAliveRegisterForm = () => {
                   ) : (
                     <Eye className="h-5 w-5" />
                   )}
-                </button>
+                </motion.button>
                 {errors.password && touched.password ? (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.password}
                   </div>
                 ) : null}
-              </div>
+              </motion.div>
 
-              <div className="relative">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="relative"
+              >
                 <Field
                   id="confirmPassword"
                   name="confirmPassword"
@@ -127,7 +192,9 @@ const KeepAliveRegisterForm = () => {
                   placeholder="Confirm Password"
                 />
                 <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-3.5 text-gray-400 hover:text-white focus:outline-none"
@@ -137,25 +204,38 @@ const KeepAliveRegisterForm = () => {
                   ) : (
                     <Eye className="h-5 w-5" />
                   )}
-                </button>
+                </motion.button>
                 {errors.confirmPassword && touched.confirmPassword ? (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.confirmPassword}
                   </div>
                 ) : null}
-              </div>
+              </motion.div>
 
-              <Button type="submit" isLoading={isSubmitting} fullWidth>
-                Create Account
-              </Button>
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.8 }}
+              >
+                <Button type="submit" isLoading={isSubmitting} fullWidth>
+                  Create Account
+                </Button>
+              </motion.div>
             </Form>
           )}
         </Formik>
 
-        <div className="mt-6 grid grid-cols-2 gap-3">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.9 }}
+          className="mt-6 grid grid-cols-2 gap-3"
+        >
           {["Google", "GitHub"].map((provider) => (
-            <button
+            <motion.button
               key={provider}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className="w-full inline-flex justify-center py-2 px-4 border border-gray-700 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"
             >
               {provider === "Google" ? (
@@ -174,11 +254,16 @@ const KeepAliveRegisterForm = () => {
                 </svg>
               )}
               <span className="ml-2">{provider}</span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
-        <p className="mt-8 text-center text-sm text-gray-400">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="mt-8 text-center text-sm text-gray-400"
+        >
           Already have an account?{" "}
           <Link
             to="/login"
@@ -186,9 +271,9 @@ const KeepAliveRegisterForm = () => {
           >
             Sign in
           </Link>
-        </p>
+        </motion.p>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
