@@ -30,7 +30,7 @@ router.post(
   authController.sendForgotPasswordEmail
 );
 router.post(
-  "/forgot-password-verify",
+  "/forgot-password-set",
   validate(authValidation.forgotPasswordVerify),
   authController.forgotPassword
 );
@@ -43,6 +43,11 @@ router.post(
   "/verify-email-otp",
   validate(authValidation.verifyEmail),
   authController.verifyEmail
+);
+router.post(
+  "/forgot-password-verify-otp",
+  validate(authValidation.verifyForgotPasswordOTP),
+  authController.verifyForgotPasswordOTP
 );
 
 router.get("/me", authenticate, authController.loggedInUser);

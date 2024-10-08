@@ -63,7 +63,16 @@ const verifyOTP = async (user, otp) => {
       throw new ApiError(httpStatus.BAD_REQUEST, "Invalid OTP");
     }
 
-    await otpModel.deleteOne({ userId: user._id, otp });
+    otpData.isVerified = true;
+    await otpData.save();
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteOTP = async (user) => {
+  try {
+    await otpModel.deleteMany({ userId: user._id });
   } catch (error) {
     throw error;
   }
@@ -74,4 +83,5 @@ module.exports = {
   changePassword,
   saveOTP,
   verifyOTP,
+  deleteOTP,
 };
