@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Mail, Lock, Eye, EyeOff, Share2 } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Share2, LucideLoader } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -34,7 +34,14 @@ const KeepAliveLoginForm = () => {
     setLoading(false);
   }, [navigate]);
   if (loading) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        {" "}
+        <motion.div animate={{ rotate: 360 }}>
+          <LucideLoader className="h-16 w-16 text-green-500" />
+        </motion.div>
+      </div>
+    );
   }
   const handleSubmit = async (values, { setSubmitting }) => {
     try {

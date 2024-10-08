@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import {
   ChevronLeft,
   ChevronRight,
@@ -10,7 +9,7 @@ import {
 import SidebarLink from "./SidebarLink";
 import Logo from "../Shared/Logo";
 
-const Sidebar = ({ isOpen, toggleSidebar }) => (
+const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => (
   <div
     className={`fixed left-[20px] top-[2%] h-[96%] bg-gray-800 rounded-xl flex flex-col items-center py-4 transition-all duration-300 ${
       isOpen ? "w-64" : "w-16"
@@ -47,14 +46,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => (
     </nav>
 
     <div className="w-full px-4 mt-auto">
-      <SidebarLink icon={<LogOut size={20} />} label="Logout" isOpen={isOpen} />
+      <SidebarLink
+        icon={<LogOut size={20} />}
+        label="Logout"
+        isOpen={isOpen}
+        onLinkClick={handleLogout}
+      />
     </div>
   </div>
 );
-
-Sidebar.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  toggleSidebar: PropTypes.func.isRequired,
-};
 
 export default Sidebar;

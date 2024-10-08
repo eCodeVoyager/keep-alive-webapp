@@ -4,7 +4,6 @@ import Logo from "../components/Shared/Logo";
 import ForgotPasswordEmail from "../components/ForgotPassword/ForgotPasswordEmail";
 import ForgotPasswordOTP from "../components/ForgotPassword/ForgotPasswordOTP";
 import ForgotPasswordReset from "../components/ForgotPassword/ForgotPasswordReset";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
@@ -22,7 +21,6 @@ const ForgotPassword = () => {
   };
 
   const handlePasswordReset = () => {
-    toast.success("Password reset successfully!");
     navigate("/login");
   };
 

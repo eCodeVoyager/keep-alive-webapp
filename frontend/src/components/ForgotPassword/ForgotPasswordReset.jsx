@@ -3,6 +3,8 @@ import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
 import { Button } from "../Shared/Button";
+import AuthService from "../../services/authService";
+import toast from "react-hot-toast";
 
 const ForgotPasswordReset = ({ email, onReset }) => {
   const PasswordSchema = Yup.object().shape({
@@ -16,15 +18,18 @@ const ForgotPasswordReset = ({ email, onReset }) => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // TODO: Implement API call to reset password
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating API call
+      await AuthService.forgot_password_set({
+        email,
+        password: values.password,
+      });
       console.log(email);
       onReset();
+      toast.success("Password reset successfully");
     } catch (error) {
       console.error(error);
+      toast.error(error.response.data.message || "Failed to reset password");
     } finally {
       setSubmitting(false);
-      
     }
   };
 

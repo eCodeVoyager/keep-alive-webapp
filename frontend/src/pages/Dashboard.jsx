@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Plus, Menu } from "lucide-react";
 import Sidebar from "../components/Sidebar/Sidebar";
 import ServerCard from "../components/Dashboard/ServerCard";
 import MonitoringModal from "../components/Dashboard/MonitoringModal";
+import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const initialServers = [
   { id: 1, url: "https://prod.example.com", status: "active" },
@@ -16,6 +18,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [monitoredServer, setMonitoredServer] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -50,10 +54,18 @@ const Dashboard = () => {
   const openMonitoringModal = (server) => {
     setMonitoredServer(server);
   };
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        handleLogout={handleLogout}
+        toggleSidebar={toggleSidebar}
+      />
       <div
         className={`flex-1 p-8 transition-all duration-300 ${
           isSidebarOpen ? "ml-64" : "ml-16"

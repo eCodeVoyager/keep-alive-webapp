@@ -48,9 +48,6 @@ const KeepAliveRegisterForm = () => {
   };
 
   const handleOTPVerified = async () => {
-    toast.success("Email verified successfully! Please login.", {
-      icon: "🎉",
-    });
     navigate("/login");
   };
 

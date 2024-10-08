@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Button } from "../Shared/Button";
+import AuthService from "../../services/authService";
 
 const ForgotPasswordEmail = ({ onSubmit }) => {
   const EmailSchema = Yup.object().shape({
@@ -12,12 +13,14 @@ const ForgotPasswordEmail = ({ onSubmit }) => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // TODO: Implement API call to send reset email
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating API call
+      await AuthService.send_forgot_password_otp({
+        email: values.email,
+      });
       onSubmit(values.email);
+      toast.success("Reset link sent successfully");
     } catch (error) {
       console.error(error);
-      toast.error("Failed to send reset email. Please try again.");
+      toast.error("Failed to send reset link");
     } finally {
       setSubmitting(false);
     }
@@ -60,6 +63,5 @@ const ForgotPasswordEmail = ({ onSubmit }) => {
     </Formik>
   );
 };
-
 
 export default ForgotPasswordEmail;

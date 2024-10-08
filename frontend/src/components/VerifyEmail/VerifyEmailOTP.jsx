@@ -14,6 +14,8 @@ const VerifyEmailOTP = ({ email, onVerified }) => {
     try {
       await AuthService.verify_email({ email, otp: values.otp });
       onVerified();
+
+      toast.success("Email verified successfully");
     } catch (error) {
       console.error(error);
       toast.error(

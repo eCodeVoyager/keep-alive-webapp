@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import { routes } from "./router/routes.data";
 import ForgotPassword from "./pages/ForgotPassword";
+import NotFoundPage from "./components/ErrorPages/NotFoundPage";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
             }
           />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
