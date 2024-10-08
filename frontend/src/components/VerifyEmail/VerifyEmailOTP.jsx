@@ -1,23 +1,24 @@
-
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import { Button } from "../Shared/Button";
+import AuthService from "../../services/authService";
 
-const ForgotPasswordOTP = ({ email, onVerified }) => {
+const VerifyEmailOTP = ({ email, onVerified }) => {
   const OTPSchema = Yup.object().shape({
     otp: Yup.string().length(6, "OTP must be 6 digits").required("Required"),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // TODO: Implement API call to verify OTP
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating API call
+      await AuthService.verify_email({ email, otp: values.otp });
       onVerified();
     } catch (error) {
       console.error(error);
-      toast.error("Invalid OTP. Please try again.");
+      toast.error(
+        error.response.data.message || "Invalid OTP. Please try again."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -60,6 +61,4 @@ const ForgotPasswordOTP = ({ email, onVerified }) => {
   );
 };
 
-
-
-export default ForgotPasswordOTP;
+export default VerifyEmailOTP;

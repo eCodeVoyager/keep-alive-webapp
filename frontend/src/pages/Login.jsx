@@ -24,14 +24,18 @@ const KeepAliveLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = cookies.get("authToken");
     if (token) {
       navigate(routes.dashboard);
     }
+    setLoading(false);
   }, [navigate]);
-
+  if (loading) {
+    return null;
+  }
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await authService.login({

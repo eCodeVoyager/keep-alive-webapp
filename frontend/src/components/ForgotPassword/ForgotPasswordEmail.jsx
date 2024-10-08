@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Button } from "../Shared/Button";
-import props from "prop-types";
 
 const ForgotPasswordEmail = ({ onSubmit }) => {
   const EmailSchema = Yup.object().shape({
@@ -62,7 +61,5 @@ const ForgotPasswordEmail = ({ onSubmit }) => {
   );
 };
 
-ForgotPasswordEmail.propTypes = {
-  onSubmit: props.func.isRequired,
-};
+
 export default ForgotPasswordEmail;

@@ -2,9 +2,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
-import { toast } from "react-hot-toast";
 import { Button } from "../Shared/Button";
-import props from "prop-types";
 
 const ForgotPasswordReset = ({ email, onReset }) => {
   const PasswordSchema = Yup.object().shape({
@@ -22,12 +20,11 @@ const ForgotPasswordReset = ({ email, onReset }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating API call
       console.log(email);
       onReset();
-      toast.success("Password reset successfully!");
     } catch (error) {
       console.error(error);
-      toast.error("Failed to reset password. Please try again.");
     } finally {
       setSubmitting(false);
+      
     }
   };
 
@@ -87,11 +84,6 @@ const ForgotPasswordReset = ({ email, onReset }) => {
       )}
     </Formik>
   );
-};
-
-ForgotPasswordReset.propTypes = {
-  email: props.string.isRequired,
-  onReset: props.func.isRequired,
 };
 
 export default ForgotPasswordReset;
