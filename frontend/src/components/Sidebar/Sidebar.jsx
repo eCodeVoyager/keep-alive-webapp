@@ -34,6 +34,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => (
       <SidebarLink
         icon={<Home size={24} />}
         label="Dashboard"
+        to="/"
         isOpen={isOpen}
         isActive={true}
       />
@@ -41,6 +42,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => (
       <SidebarLink
         icon={<Settings2 size={24} />}
         label="Settings"
+        to="/settings"
         isOpen={isOpen}
       />
     </nav>

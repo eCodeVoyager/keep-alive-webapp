@@ -3,6 +3,6 @@ export const routes = {
   login: "/login",
   register: "/register",
   dashboard: "/dashboard",
-  notFound: "/404",
   forgotPassword: "/forgot-password",
+  settings: "/settings",
 };

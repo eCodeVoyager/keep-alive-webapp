@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import { routes } from "./router/routes.data";
 import ForgotPassword from "./pages/ForgotPassword";
 import NotFoundPage from "./components/ErrorPages/NotFoundPage";
+import UserSettings from "./pages/UserSettings";
 
 const App = () => {
   return (
@@ -22,6 +23,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={routes.settings}
+            element={
+              <ProtectedRoute>
+                <UserSettings />
               </ProtectedRoute>
             }
           />

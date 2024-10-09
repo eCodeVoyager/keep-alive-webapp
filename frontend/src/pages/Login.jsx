@@ -9,6 +9,7 @@ import { Button } from "../components/Shared/Button";
 import Logo from "../components/Shared/Logo";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/UserContext";
 import authService from "../services/authService";
 import { routes } from "../router/routes.data";
 import cookies from "js-cookie";
@@ -23,6 +24,7 @@ const LoginSchema = Yup.object().shape({
 const KeepAliveLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
+  const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
@@ -53,6 +55,8 @@ const KeepAliveLoginForm = () => {
         expires: values.rememberMe ? 7 : undefined,
       });
       login(response.data.accessToken);
+      const user = await authService.me();
+      updateUser(user);
       setSubmitting(false);
       navigate(routes.dashboard);
     } catch (error) {
