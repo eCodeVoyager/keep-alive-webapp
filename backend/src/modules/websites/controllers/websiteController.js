@@ -1,7 +1,9 @@
 const websiteService = require("../services/websiteService");
 const ApiResponse = require("../../../utils/apiResponse");
+const ApiError = require("../../../utils/apiError");
 const httpStatus = require("http-status");
-const { schedulePing } = require("../../../jobs/pingJob");
+const { schedulePing, deleteScheduledJob } = require("../../../jobs/pingJob");
+const logService = require("../../logs/services/logService");
 const axios = require("axios");
 
 const addWebsite = async (req, res, next) => {
@@ -77,7 +79,10 @@ const updateWebsite = async (req, res, next) => {
 
 const deleteWebsite = async (req, res, next) => {
   try {
+    const website = await websiteService.getWebsite(req.params.id);
+    await deleteScheduledJob(website.url);
     await websiteService.deleteWebsite(req.params.id);
+    await logService.deleteLogs(website.url);
     return res.json(
       new ApiResponse(httpStatus.OK, null, "Website deleted successfully")
     );

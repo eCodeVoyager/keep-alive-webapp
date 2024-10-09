@@ -9,26 +9,18 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const express = require("express");
 const redis = require("./config/redis");
-const admin = require("./database/firebase");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 
 // Import routes and middlewares
-const { users, auth, websites } = require("./index");
+const { users, auth, websites, logs } = require("./index");
 const { errorHandler, notFoundHandler } = require("./utils/errorHandler");
 
 // Load environment variables from .env file
 
 const app = express();
-
-// const accessLogStream = fs.createWriteStream(
-//   path.join(__dirname, "logs", "app.log"),
-//   {
-//     flags: "a",
-//   }
-// );
 
 //Middlewares
 const allMiddlewares = [
@@ -61,6 +53,7 @@ app.get("/", (_, res) => {
 app.use("/api/v1/auth", auth.authRoutes);
 app.use("/api/v1/users", users.userRoutes);
 app.use("/api/v1/websites", websites.websiteRoutes);
+app.use("/api/v1/logs", logs.logRoutes);
 
 // Error handling middleware
 app.use(notFoundHandler);
