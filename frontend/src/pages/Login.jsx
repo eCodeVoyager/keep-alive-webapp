@@ -56,7 +56,7 @@ const KeepAliveLoginForm = () => {
       setSubmitting(false);
       navigate(routes.dashboard);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response.data.message || "Something went wrong");
       setSubmitting(false);
     }
   };

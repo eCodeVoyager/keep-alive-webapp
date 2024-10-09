@@ -13,7 +13,7 @@ const NotFoundPage = () => {
           className="mb-8"
         >
           <svg
-            className="w-36 h-36 mx-auto"
+            className="w-28 h-28 mx-auto"
             viewBox="0 0 200 200"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

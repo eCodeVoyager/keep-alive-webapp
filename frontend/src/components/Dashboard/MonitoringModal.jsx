@@ -1,5 +1,4 @@
 import { X } from "lucide-react";
-import props from "prop-types";
 
 const MonitoringModal = ({ isOpen, onClose, server }) => {
   if (!isOpen) return null;
@@ -30,10 +29,6 @@ const MonitoringModal = ({ isOpen, onClose, server }) => {
   );
 };
 
-MonitoringModal.propTypes = {
-  isOpen: props.bool.isRequired,
-  onClose: props.func.isRequired,
-  server: props.object,
-};
+
 
 export default MonitoringModal;
