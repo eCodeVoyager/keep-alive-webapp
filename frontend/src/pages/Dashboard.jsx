@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import ServerForm from "../components/Dashboard/ServerForm";
 import ServerService from "../services/serverService";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+import { Loader as LucideLoader } from "lucide-react";
 
 const Dashboard = () => {
   const [servers, setServers] = useState([]);
@@ -39,6 +41,16 @@ const Dashboard = () => {
 
     fetchServers();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <motion.div animate={{ rotate: 360 }}>
+          <LucideLoader className="h-16 w-16 text-green-500" />
+        </motion.div>
+      </div>
+    );
+  }
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const addServer = async (newServerUrl, interval) => {

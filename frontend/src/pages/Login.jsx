@@ -1,19 +1,17 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Mail, Lock, Eye, EyeOff, Share2, LucideLoader } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/Shared/Button";
 import Logo from "../components/Shared/Logo";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import { UserContext } from "../contexts/UserContext";
 import authService from "../services/authService";
 import { routes } from "../router/routes.data";
 import cookies from "js-cookie";
-import { useEffect } from "react";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -24,7 +22,7 @@ const LoginSchema = Yup.object().shape({
 const KeepAliveLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
-  const { updateUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
@@ -35,33 +33,42 @@ const KeepAliveLoginForm = () => {
     }
     setLoading(false);
   }, [navigate]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-        {" "}
         <motion.div animate={{ rotate: 360 }}>
           <LucideLoader className="h-16 w-16 text-green-500" />
         </motion.div>
       </div>
     );
   }
+
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
+      setSubmitting(true);
       const response = await authService.login({
         email: values.email,
         password: values.password,
       });
-      cookies.set("authToken", response.data.accessToken, {
-        expires: values.rememberMe ? 7 : undefined,
-      });
-      login(response.data.accessToken);
-      const user = await authService.me();
-      updateUser(user);
-      setSubmitting(false);
-      navigate(routes.dashboard);
+
+      if (response?.data?.accessToken) {
+        cookies.set("authToken", response.data.accessToken, {
+          expires: values.rememberMe ? 7 : undefined, // 7 days if rememberMe is checked
+        });
+
+        login(response.data.accessToken);
+
+        const user = await authService.me();
+        setUser(user);
+
+        // Redirect to dashboard
+        navigate(routes.dashboard);
+      }
     } catch (error) {
-      toast.error(error.response.data.message || "Something went wrong");
-      setSubmitting(false);
+      toast.error(error?.response?.data?.message || "Error logging in");
+    } finally {
+      setSubmitting(false); // Stop form submission state
     }
   };
 
