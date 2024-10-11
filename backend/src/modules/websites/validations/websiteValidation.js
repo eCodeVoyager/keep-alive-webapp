@@ -4,7 +4,7 @@ const addWebsite = {
   body: Joi.object().keys({
     url: Joi.string().required(),
     ping_time: Joi.string().required(),
-    status: Joi.string().default("working"),
+    status: Joi.string().default("online").allow("online", "offline"),
   }),
 };
 
