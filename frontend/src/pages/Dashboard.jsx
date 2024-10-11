@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ServerCard from "../components/Dashboard/ServerCard";
 import MonitoringModal from "../components/Dashboard/MonitoringModal";
 import ServerForm from "../components/Dashboard/ServerForm";
@@ -6,18 +6,25 @@ import ServerService from "../services/serverService";
 import toast from "react-hot-toast";
 import DashboardLayout from "../components/Layouts/DashboardLayout";
 import { motion } from "framer-motion";
+import { WebsiteContext } from "../contexts/WebsiteContext";
 
 const Dashboard = () => {
   const [servers, setServers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [monitoredServer, setMonitoredServer] = useState(null);
+  const { websites, setWebsites } = useContext(WebsiteContext);
 
   useEffect(() => {
     const fetchServers = async () => {
       setIsLoading(true);
       try {
-        const { data } = await ServerService.getAllServers();
-        setServers(data);
+        if (websites.length === 0) {
+          const { data } = await ServerService.getAllServers();
+          setWebsites(data);
+          setServers(data);
+        } else {
+          setServers(websites);
+        }
       } catch (error) {
         if (error.response?.status === 404) {
           setServers([]);
