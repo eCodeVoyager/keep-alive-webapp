@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { ChevronRight } from "lucide-react";
 
 export const Button = ({
@@ -7,6 +6,7 @@ export const Button = ({
   isLoading = false,
   fullWidth = false,
   className = "",
+  icon = null,
   ...props
 }) => {
   const baseClasses =
@@ -45,17 +45,11 @@ export const Button = ({
           ></path>
         </svg>
       ) : (
-        children
+        <>
+          {icon ? icon : ""} {children}
+          {icon ? "" : <ChevronRight className="h-5 w-5 ml-2" />}
+        </>
       )}
-      {!isLoading && <ChevronRight />}
     </button>
   );
-};
-
-Button.propTypes = {
-  children: PropTypes.node.isRequired,
-  type: PropTypes.oneOf(["button", "submit", "reset"]),
-  isLoading: PropTypes.bool,
-  fullWidth: PropTypes.bool,
-  className: PropTypes.string,
 };

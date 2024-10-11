@@ -1,4 +1,3 @@
-
 import { Plus } from "lucide-react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -45,7 +44,7 @@ const ServerForm = ({ addServer, isLoading }) => {
           <Field
             as="select"
             name="interval"
-            className="px-2 py-2 bg-gray-800 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+            className="max-h-10 px-2 py-2 bg-gray-800 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none "
           >
             <option value="5m">5m</option>
             <option value="10m">10m</option>
@@ -56,7 +55,7 @@ const ServerForm = ({ addServer, isLoading }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300 flex items-center"
+            className="max-h-10 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300 flex items-center"
           >
             <Plus className="mr-2" /> Add Server
           </button>

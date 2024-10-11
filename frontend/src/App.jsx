@@ -8,6 +8,7 @@ import { routes } from "./router/routes.data";
 import ForgotPassword from "./pages/ForgotPassword";
 import NotFoundPage from "./components/ErrorPages/NotFoundPage";
 import UserSettings from "./pages/UserSettings";
+import Feedback from "./pages/Feedback";
 
 const App = () => {
   return (
@@ -34,7 +35,16 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path={routes.feedback}
+            element={
+              <ProtectedRoute>
+                <Feedback />
+              </ProtectedRoute>
+            }
+          />
         </Route>
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>

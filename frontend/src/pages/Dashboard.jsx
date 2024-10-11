@@ -1,23 +1,16 @@
-import { useState, useContext, useEffect } from "react";
-import { Menu } from "lucide-react";
-import Sidebar from "../components/Sidebar/Sidebar";
+import { useState, useEffect } from "react";
 import ServerCard from "../components/Dashboard/ServerCard";
 import MonitoringModal from "../components/Dashboard/MonitoringModal";
-import { AuthContext } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 import ServerForm from "../components/Dashboard/ServerForm";
 import ServerService from "../services/serverService";
 import toast from "react-hot-toast";
+import DashboardLayout from "../components/Layouts/DashboardLayout";
 import { motion } from "framer-motion";
-import { Loader as LucideLoader } from "lucide-react";
 
 const Dashboard = () => {
   const [servers, setServers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [monitoredServer, setMonitoredServer] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { logout } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchServers = async () => {
@@ -26,13 +19,12 @@ const Dashboard = () => {
         const { data } = await ServerService.getAllServers();
         setServers(data);
       } catch (error) {
-        if (error.response.status === 401) {
-          logout();
-          navigate("/login");
-        } else if (error.response.status === 404) {
-          return setServers([]);
+        if (error.response?.status === 404) {
+          setServers([]);
         } else {
-          toast.error(error.response.data.message || "Error fetching servers");
+          toast.error(
+            error.response?.data?.message || "Error fetching servers"
+          );
         }
       } finally {
         setIsLoading(false);
@@ -41,17 +33,6 @@ const Dashboard = () => {
 
     fetchServers();
   }, []);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-        <motion.div animate={{ rotate: 360 }}>
-          <LucideLoader className="h-16 w-16 text-green-500" />
-        </motion.div>
-      </div>
-    );
-  }
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const addServer = async (newServerUrl, interval) => {
     setIsLoading(true);
@@ -63,7 +44,7 @@ const Dashboard = () => {
       setServers([...servers, data]);
       toast.success("Server added successfully");
     } catch (error) {
-      toast.error(error.response.data.message || "Error adding server");
+      toast.error(error.response?.data?.message || "Error adding server");
     } finally {
       setIsLoading(false);
     }
@@ -75,32 +56,22 @@ const Dashboard = () => {
       setServers(servers.filter((server) => server._id !== id));
       toast.success("Server removed successfully");
     } catch (error) {
-      toast.error(error.response.data.message || "Error removing server");
+      toast.error(error.response?.data?.message || "Error removing server");
     }
   };
 
   const openMonitoringModal = (server) => {
     setMonitoredServer(server);
   };
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex">
-      <Sidebar
-        isOpen={isSidebarOpen}
-        handleLogout={handleLogout}
-        toggleSidebar={toggleSidebar}
-      />
-      <div className={`flex-1 py-20 px-80 transition-all duration-300 `}>
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <button onClick={toggleSidebar} className="md:hidden text-white">
-            <Menu size={24} />
-          </button>
-        </div>
+    <DashboardLayout PageName="Dashboard">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="text-3xl font-bold text-white mb-6">Dashboard</h2>
         <ServerForm addServer={addServer} isLoading={isLoading} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
           {servers.map((server) => (
@@ -112,13 +83,13 @@ const Dashboard = () => {
             />
           ))}
         </div>
-      </div>
-      <MonitoringModal
-        isOpen={!!monitoredServer}
-        onClose={() => setMonitoredServer(null)}
-        server={monitoredServer}
-      />
-    </div>
+        <MonitoringModal
+          isOpen={!!monitoredServer}
+          onClose={() => setMonitoredServer(null)}
+          server={monitoredServer}
+        />
+      </motion.div>
+    </DashboardLayout>
   );
 };
 

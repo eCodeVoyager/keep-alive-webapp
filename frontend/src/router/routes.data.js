@@ -5,4 +5,5 @@ export const routes = {
   dashboard: "/dashboard",
   forgotPassword: "/forgot-password",
   settings: "/settings",
+  feedback: "/feedback",
 };

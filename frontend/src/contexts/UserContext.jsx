@@ -1,5 +1,4 @@
 import { createContext, useState } from "react";
-import props from "prop-types";
 
 const UserContext = createContext();
 const UserProvider = ({ children }) => {
@@ -12,7 +11,4 @@ const UserProvider = ({ children }) => {
   );
 };
 
-UserProvider.propTypes = {
-  children: props.node.isRequired,
-};
 export { UserContext, UserProvider };

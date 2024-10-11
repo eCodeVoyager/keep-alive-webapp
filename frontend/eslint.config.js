@@ -25,7 +25,7 @@ export default [
     },
     rules: {
       // Disable prop-types rule
-      "react/prop-types": "off",
+      "react/prop-types": [enabled, { ignore: ["children"] }],
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules,

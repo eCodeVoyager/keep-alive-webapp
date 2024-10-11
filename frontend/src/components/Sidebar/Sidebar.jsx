@@ -2,14 +2,16 @@ import {
   ChevronLeft,
   ChevronRight,
   Home,
-  Ticket,
   LogOut,
+  Send,
   Settings2,
 } from "lucide-react";
 import SidebarLink from "./SidebarLink";
 import Logo from "../Shared/Logo";
+import { routes } from "../../router/routes.data";
+import { Link } from "react-router-dom";
 
-const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => (
+const Sidebar = ({ isOpen, toggleSidebar, handleLogout, pathname }) => (
   <div
     className={`ml-[20px] mt-[2dvh] h-[96dvh] bg-gray-800 rounded-xl flex flex-col items-center py-4 transition-all duration-300 ${
       isOpen ? "w-64" : "w-16"
@@ -17,10 +19,12 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => (
   >
     <div className="flex items-center justify-between w-full px-4 mb-6">
       {isOpen && (
-        <div className="flex gap-3 text-white font-bold text-2xl ">
-          <Logo className="!w-10 !h-10" />
-          KeepAlive
-        </div>
+        <Link to={routes.dashboard}>
+          <div className="flex gap-3 text-white font-bold text-2xl ">
+            <Logo className="!w-10 !h-10" />
+            KeepAlive
+          </div>
+        </Link>
       )}
       <button
         onClick={toggleSidebar}
@@ -34,16 +38,23 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => (
       <SidebarLink
         icon={<Home size={24} />}
         label="Dashboard"
-        to="/"
+        to={routes.dashboard}
         isOpen={isOpen}
-        isActive={true}
+        isActive={pathname === routes.dashboard ? true : false}
       />
-      <SidebarLink icon={<Ticket size={24} />} label="Ticket" isOpen={isOpen} />
+      <SidebarLink
+        icon={<Send size={24} />}
+        label="Feedback"
+        to={routes.feedback}
+        isOpen={isOpen}
+        isActive={pathname === routes.feedback ? true : false}
+      />
       <SidebarLink
         icon={<Settings2 size={24} />}
         label="Settings"
-        to="/settings"
+        to={routes.settings}
         isOpen={isOpen}
+        isActive={pathname === routes.settings ? true : false}
       />
     </nav>
 
