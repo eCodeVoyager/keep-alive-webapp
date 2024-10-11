@@ -5,19 +5,22 @@ import { UserContext } from "../../contexts/UserContext";
 import AuthService from "../../services/authService";
 import { useContext, useEffect, useState } from "react";
 import Loader from "../Shared/Loader";
+import { useNavigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
   const { setUser } = useContext(UserContext);
   const location = useLocation();
-  const [loading, setLoading] = useState(true); // State to track loading
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // State for authentication status
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthentication = async () => {
       const token = Cookie.get("authToken");
       if (!token) {
         setLoading(false);
-        return; // No token, skip further processing
+        navigate(routes.login);
+        return;
       }
 
       try {
@@ -26,12 +29,15 @@ const ProtectedRoute = ({ children }) => {
         setIsAuthenticated(true);
       } catch (error) {
         console.error(error);
+        Cookie.remove("authToken");
+        setIsAuthenticated(false);
+        navigate(routes.login);
       } finally {
-        setLoading(false); // Set loading to false after checking
+        setLoading(false);
       }
     };
 
-    checkAuthentication(); // Call the async function in useEffect
+    checkAuthentication();
   }, [setUser]);
 
   if (loading) {
