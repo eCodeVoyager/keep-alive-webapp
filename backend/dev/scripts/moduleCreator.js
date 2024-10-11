@@ -30,6 +30,25 @@ const moduleCreator = (moduleName) => {
   // Create main module directory and its subdirectories
   createDirectory(modulePath);
   directories.forEach((dir) => createDirectory(path.join(modulePath, dir)));
+  
+  //make module index.js file
+  fs.writeFileSync(
+    path.join(modulePath, "index.js"),
+    `const ${moduleName}Controller = require("./controllers/${moduleName}Controller");
+const ${moduleName}Model = require("./models/${moduleName}Model");
+const ${moduleName}Routes = require("./routes/${moduleName}Routes");
+const ${moduleName}Service = require("./services/${moduleName}Service");
+const ${moduleName}Validation = require("./validations/${moduleName}Validation");
+
+module.exports = {
+  ${moduleName}Controller,
+  ${moduleName}Model,
+  ${moduleName}Routes,
+  ${moduleName}Service,
+  ${moduleName}Validation,
+};
+`
+  );
 
   // Create the necessary files
   const files = {

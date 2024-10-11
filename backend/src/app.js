@@ -15,7 +15,7 @@ const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 
 // Import routes and middlewares
-const { users, auth, websites, logs } = require("./index");
+const { users, auth, websites, logs, feedback } = require("./index");
 const { errorHandler, notFoundHandler } = require("./utils/errorHandler");
 
 // Load environment variables from .env file
@@ -54,6 +54,7 @@ app.use("/api/v1/auth", auth.authRoutes);
 app.use("/api/v1/users", users.userRoutes);
 app.use("/api/v1/websites", websites.websiteRoutes);
 app.use("/api/v1/logs", logs.logRoutes);
+app.use("/api/v1/feedbacks", feedback.feedbackRoutes);
 
 // Error handling middleware
 app.use(notFoundHandler);
