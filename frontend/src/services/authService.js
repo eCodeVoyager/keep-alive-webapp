@@ -1,4 +1,3 @@
-
 import requests from "./httpRequest";
 
 const AuthService = {
@@ -21,6 +20,8 @@ const AuthService = {
 
   forgot_password_set: async (body) =>
     requests.post("/auth/forgot-password-set", body),
+
+  change_password: async (body) => requests.post("/auth/change-password", body),
 };
 
 export default AuthService;

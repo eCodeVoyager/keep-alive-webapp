@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Button } from "../components/Shared/Button";
 import DashboardLayout from "../components/Layouts/DashboardLayout";
+import FeedbackService from "../services/feedbackService";
 
 const feedbackValidationSchema = Yup.object().shape({
   rating: Yup.number().required("Please select a rating"),
@@ -17,8 +18,10 @@ const Feedback = () => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      // TODO: Implement API call to submit feedback
-      console.log("Submitting feedback:", values);
+      await FeedbackService.create({
+        rating: values.rating,
+        comment: values.comment,
+      });
       toast.success("Feedback submitted successfully");
       resetForm();
     } catch (error) {

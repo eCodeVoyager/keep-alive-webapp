@@ -8,6 +8,7 @@ import { Button } from "../components/Shared/Button";
 import { UserContext } from "../contexts/UserContext";
 import UserService from "../services/userService";
 import DashboardLayout from "../components/Layouts/DashboardLayout";
+import AuthService from "../services/authService";
 
 const nameValidationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -44,10 +45,10 @@ const UserSettings = () => {
 
   const handlePasswordSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      await UserService.changePassword(
-        values.currentPassword,
-        values.newPassword
-      );
+      await AuthService.change_password({
+        oldPassword: values.currentPassword,
+        newPassword: values.newPassword,
+      });
       resetForm();
       toast.success("Password changed successfully");
     } catch (error) {

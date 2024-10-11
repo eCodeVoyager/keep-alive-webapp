@@ -64,6 +64,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout, pathname }) => (
         label="Logout"
         isOpen={isOpen}
         onLinkClick={handleLogout}
+        to={routes.login}
       />
     </div>
   </div>
