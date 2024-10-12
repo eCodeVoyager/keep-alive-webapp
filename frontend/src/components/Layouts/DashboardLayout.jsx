@@ -2,11 +2,16 @@ import React, { useState, useContext } from "react";
 import { Menu } from "lucide-react";
 import Sidebar from "../Sidebar/Sidebar";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import LogsModal from "../Dashboard/LogsModal";
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedServer, setSelectedServer] = useState(null);
+  const [serverLogs, setServerLogs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,6 +22,26 @@ const DashboardLayout = ({ children }) => {
     logout();
     navigate("/login");
   };
+
+  const openModal = (server, logs) => {
+    setSelectedServer(server);
+    setServerLogs(logs);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedServer(null);
+    setServerLogs([]);
+  };
+
+  // Clone children and pass necessary props
+  const childrenWithProps = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { openModal });
+    }
+    return child;
+  });
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
@@ -33,12 +58,13 @@ const DashboardLayout = ({ children }) => {
               <Menu size={24} />
             </button>
           </div>
-          {children}
+          {childrenWithProps}
           <footer className="text-slate-200 text-center py-4 text-sm fixed bottom-0 left-[50vw]">
             Made with ❤️ by{" "}
             <a
               href="https://github.com/eCodeVoyager"
               target="_blank"
+              rel="noopener noreferrer"
               className="text-green-400"
             >
               Ehsan
@@ -46,6 +72,13 @@ const DashboardLayout = ({ children }) => {
           </footer>
         </div>
       </div>
+      <LogsModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        server={selectedServer}
+        logs={serverLogs}
+        isLoading={isLoading}
+      />
     </div>
   );
 };

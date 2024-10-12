@@ -67,13 +67,13 @@ const UserSettings = () => {
       >
         <h2 className="text-3xl font-bold text-white mb-6">User Settings</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="flex flex-col gap-6">
           {/* Personal Information */}
           <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
             <h3 className="text-xl font-semibold text-white mb-4">
               Personal Information
             </h3>
-            <div className="space-y-4">
+            <div className="flex w-full justify-between ">
               <Formik
                 initialValues={{ name: user?.name || "" }}
                 validationSchema={nameValidationSchema}
@@ -89,7 +89,7 @@ const UserSettings = () => {
                             id="name"
                             name="name"
                             type="text"
-                            className="flex-1 bg-gray-700 text-white px-2 py-1 rounded"
+                            className="flex-1 bg-gray-700 text-white px-2 py-1 rounded max-w-80"
                           />
                           <button
                             type="submit"
@@ -101,7 +101,7 @@ const UserSettings = () => {
                         </div>
                       ) : (
                         <>
-                          <span className="flex-1 text-white">
+                          <span className="flex-1 text-white max-w-80">
                             {values.name}
                           </span>
                           <button

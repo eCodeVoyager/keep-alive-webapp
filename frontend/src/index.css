@@ -8,3 +8,8 @@
         @apply bg-gray-900;
     }
 }
+
+
+.custom-scrollbar::-webkit-scrollbar {
+          width: 0px;
+        }

@@ -1,5 +1,4 @@
 import { Server, LucideLogs, Trash2 } from "lucide-react";
-import props from "prop-types";
 
 const ServerCard = ({ server, onRemove, onMonitor }) => (
   <div className="bg-gray-800 p-4 rounded-lg shadow-lg flex items-center justify-between ">
@@ -30,11 +29,5 @@ const ServerCard = ({ server, onRemove, onMonitor }) => (
     </div>
   </div>
 );
-
-ServerCard.propTypes = {
-  server: props.object.isRequired,
-  onRemove: props.func.isRequired,
-  onMonitor: props.func.isRequired,
-};
 
 export default ServerCard;
