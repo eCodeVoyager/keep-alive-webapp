@@ -11,11 +11,11 @@ const processEmailJobs = () => {
 
     try {
       let info = await transporter.sendMail(mailOptions);
-      console.log("Email sent: " + info.response);
-      done(null, info); // Mark the job as completed
+      await job.remove();
+      done(null, info);
     } catch (error) {
       console.error("Error sending email: ", error);
-      done(error); // Mark the job as failed
+      done(error);
     }
   });
 

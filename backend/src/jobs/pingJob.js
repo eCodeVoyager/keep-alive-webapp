@@ -39,6 +39,7 @@ const processPingJobs = () => {
         status: response.status,
         responseTime: elapsedTime,
       });
+      await job.remove();
       done(null, response);
     } catch (error) {
       await logService.createLog({

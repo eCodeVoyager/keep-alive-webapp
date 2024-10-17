@@ -9,7 +9,6 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const express = require("express");
 const redis = require("./config/redis");
-const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -33,7 +32,7 @@ const allMiddlewares = [
   mongoSanitize(),
   hpp(),
   cookieParser(),
-  bodyParser.json(),
+  express.json(),
   cors(),
 ];
 
