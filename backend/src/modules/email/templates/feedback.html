@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reset Your Keep-Alive Password</title>
+    <title>New Feedback Received - Keep-Alive</title>
   </head>
   <body
     style="
@@ -86,7 +86,7 @@
                     margin: 0 0 20px;
                   "
                 >
-                  Reset Your Password
+                  New Feedback Received
                 </h1>
                 <p
                   style="
@@ -96,44 +96,43 @@
                     line-height: 1.6;
                   "
                 >
-                  We've received a request to reset your Keep-Alive account
-                  password. Please use the following One-Time Password (OTP) to
-                  complete the process:
+                  A user has submitted new feedback for the Keep-Alive app. Here
+                  are the details:
                 </p>
 
+                <!-- Feedback Card -->
                 <div
                   style="
                     background-color: #1f2937;
                     border-radius: 8px;
                     padding: 20px;
-                    text-align: center;
                     margin-bottom: 30px;
                   "
                 >
-                  <p
+                  <!-- Star Rating -->
+                  <div style="margin-bottom: 20px">
+                    {{#each stars}}
+                    <img
+                      src="{{this}}"
+                      alt="Star"
+                      style="width: 24px; height: 24px; display: inline-block"
+                    />
+                    {{/each}}
+                  </div>
+
+                  <!-- Feedback Comment -->
+                  <div
                     style="
-                      color: #10b981;
-                      font-size: 32px;
-                      font-weight: bold;
-                      margin: 0;
-                      letter-spacing: 5px;
+                      background-color: #374151;
+                      border-radius: 8px;
+                      padding: 20px;
                     "
                   >
-                    {{otp}}
-                  </p>
+                    <p style="color: #d1d5db; margin: 0; line-height: 1.6">
+                      "{{comment}}"
+                    </p>
+                  </div>
                 </div>
-
-                <p
-                  style="
-                    color: #9ca3af;
-                    text-align: center;
-                    margin: 0 0 30px;
-                    line-height: 1.6;
-                  "
-                >
-                  This OTP is valid for 10 minutes. If you did not request this
-                  password reset, please ignore this email.
-                </p>
               </td>
             </tr>
 
@@ -156,7 +155,7 @@
                           text-decoration: none;
                           margin: 0 10px;
                         "
-                        >Help Center</a
+                        >Dashboard</a
                       >
                       <a
                         href="#"
@@ -165,7 +164,7 @@
                           text-decoration: none;
                           margin: 0 10px;
                         "
-                        >Contact Support</a
+                        >Settings</a
                       >
                     </td>
                   </tr>
