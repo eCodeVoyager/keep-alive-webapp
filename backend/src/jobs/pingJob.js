@@ -39,7 +39,6 @@ const processPingJobs = () => {
         status: response.status,
         responseTime: elapsedTime,
       });
-      await job.remove();
       done(null, response);
     } catch (error) {
       await logService.createLog({
@@ -52,6 +51,15 @@ const processPingJobs = () => {
     }
   });
   console.log("🚀 Ping worker started");
+
+  // Removing the completed job from the queue
+  pingQueue.on("completed", async (job) => {
+    try {
+      await job.remove();
+    } catch (error) {
+      console.error("Error removing completed job:", error);
+    }
+  });
 };
 
 /// Function to delete a scheduled job by URL

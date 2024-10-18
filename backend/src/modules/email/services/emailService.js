@@ -12,7 +12,6 @@ const emailQueue = require("../../../config/emailQueue");
  * @returns {Promise<void>}
  */
 const sendEmail = async (to, subject, templateName, context) => {
-  console.log(to);
   const templatePath = path.join(
     __dirname,
     "../templates",
