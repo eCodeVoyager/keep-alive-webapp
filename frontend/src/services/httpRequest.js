@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import axios from "axios";
-const BASE_URL = "https://keep-alive-webapp.onrender.com/api/v1";
+
+const BASE_URL = `${import.meta.env.VITE_BACKEND_API_URL}/api/v1`;
 const instance = axios.create({
   baseURL: BASE_URL,
   timeout: 30000,

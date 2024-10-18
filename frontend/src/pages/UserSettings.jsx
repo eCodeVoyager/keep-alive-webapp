@@ -102,7 +102,9 @@ const UserSettings = () => {
                       ) : (
                         <>
                           <span className="flex-1 text-white max-w-80">
-                            {values.name}
+                            {values.name?.length > 0
+                              ? values.name
+                              : "Edit your name"}
                           </span>
                           <button
                             type="button"
