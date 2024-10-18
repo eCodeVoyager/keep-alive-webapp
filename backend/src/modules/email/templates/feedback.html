@@ -59,17 +59,17 @@
                     width: 80px;
                     height: 80px;
                     border-radius: 50%;
-                    display: inline-flex;
+                    display: flex;
                     align-items: center;
                     justify-content: center;
                     box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
                   "
                 >
                   <img
-                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12h-4l-3 9L9 3l-3 9H2'/%3E%3C/svg%3E"
+                    src="https://i.ibb.co.com/Mg5H3j2/Vector-2.png"
                     alt="Keep-Alive Logo"
-                    width="48"
-                    height="48"
+                    width="36"
+                    height="36"
                   />
                 </div>
               </td>
@@ -96,8 +96,8 @@
                     line-height: 1.6;
                   "
                 >
-                  A user has submitted new feedback for the Keep-Alive app. Here
-                  are the details:
+                  {{user_email}} has submitted new feedback for the Keep-Alive
+                  app. Here are the details:
                 </p>
 
                 <!-- Feedback Card -->
@@ -111,13 +111,9 @@
                 >
                   <!-- Star Rating -->
                   <div style="margin-bottom: 20px">
-                    {{#each stars}}
-                    <img
-                      src="{{this}}"
-                      alt="Star"
-                      style="width: 24px; height: 24px; display: inline-block"
-                    />
-                    {{/each}}
+                    <!-- Pass the star icons dynamically from your backend -->
+                    {{{stars}}}
+                    <!-- This is the placeholder where the stars HTML string should go -->
                   </div>
 
                   <!-- Feedback Comment -->

@@ -2,6 +2,8 @@ const httpStatus = require("http-status");
 const ApiError = require("../../../utils/apiError");
 const ApiResponse = require("../../../utils/apiResponse");
 const feedbackService = require("../services/feedbackService");
+const sendEmail = require("../../email/services/emailService");
+const generateStars = require("../../../utils/feedbackTemplateHelper");
 
 const createFeedback = async (req, res, next) => {
   try {
@@ -10,6 +12,19 @@ const createFeedback = async (req, res, next) => {
       user: req.user.id,
       user_email: req.user.email,
     });
+    const starsHTML = generateStars(feedback.rating);
+
+    await sendEmail(
+      process.env.FEEDBACK_RECIEVE_EMAIL,
+      "New Feedback",
+      "feedback",
+      {
+        stars: starsHTML,
+        rating: feedback.rating,
+        comment: feedback.comment,
+        user: feedback.user_email,
+      }
+    );
     return res
       .status(httpStatus.CREATED)
       .json(
