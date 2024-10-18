@@ -32,6 +32,7 @@ const KeepAliveRegisterForm = () => {
       await AuthService.register({
         email: values.email,
         password: values.password,
+        name: values.name,
       });
       await AuthService.send_verification_email({ email: values.email });
       toast.success("Please verify email to continue.");

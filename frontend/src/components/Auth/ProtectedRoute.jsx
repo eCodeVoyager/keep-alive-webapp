@@ -25,6 +25,10 @@ const ProtectedRoute = ({ children }) => {
 
       try {
         const user = await AuthService.me();
+        if (user.data[0].isVerified === false) {
+          navigate(routes.hero);
+          return;
+        }
         setUser(user.data[0]);
         setIsAuthenticated(true);
       } catch (error) {
