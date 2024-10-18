@@ -8,6 +8,7 @@ const pingQueue = new Queue("pingQueue", {
   redis: {
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
+    tls: process.env.REDIS_USE_TLS === "true" ? {} : false,
     password: process.env.REDIS_PASSWORD,
   },
 });
