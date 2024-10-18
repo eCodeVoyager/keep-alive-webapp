@@ -33,7 +33,7 @@ const ServerForm = ({ addServer, isLoading }) => {
               name="serverUrl"
               type="text"
               placeholder="Enter server URL"
-              className="w-full px-4 py-2 bg-gray-800 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-gray-800 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none "
             />
             {errors.serverUrl && touched.serverUrl && (
               <div className="text-red-500 text-sm mt-1">
@@ -44,7 +44,7 @@ const ServerForm = ({ addServer, isLoading }) => {
           <Field
             as="select"
             name="interval"
-            className="max-h-10 px-2 py-2 bg-gray-800 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none "
+            className="max-h-10 px-2 py-2 bg-gray-800 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none border-gray-800 border-r-8"
           >
             <option value="5m">5m</option>
             <option value="10m">10m</option>

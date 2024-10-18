@@ -1,7 +1,7 @@
 import requests from "./httpRequest";
 
 const UserService = {
-  updateName: async (name) => requests.put("/users/name", { name }),
+  updateName: async (id, name) => requests.put(`/users/${id}`, { name }),
 };
 
 export default UserService;

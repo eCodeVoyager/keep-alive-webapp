@@ -28,16 +28,17 @@ const UserSettings = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
-  const { user, updateUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const handleNameSubmit = async (values, { setSubmitting }) => {
     try {
-      const updatedUser = await UserService.updateName(values.name);
-      updateUser(updatedUser);
+      const updatedUser = await UserService.updateName(user._id, values.name);
+      setUser(updatedUser.data);
       setIsEditingName(false);
       toast.success("Name updated successfully");
     } catch (error) {
-      toast.error(error.response.data.message || "Error updating name");
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Error updating name");
     } finally {
       setSubmitting(false);
     }
