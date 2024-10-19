@@ -52,7 +52,7 @@ const DashboardLayout = ({ children }) => {
         pathname={location.pathname}
       />
       <div className={`flex-1 transition-all duration-300 ease-in-out`}>
-        <div className="py-10 px-4 sm:px-6 lg:px-80">
+        <div className="py-10 px-4 sm:px-6 lg:px-10 xl:px-20 2xl:px-60">
           <div className="flex justify-between items-center mb-10">
             <button onClick={toggleSidebar} className="lg:hidden text-white">
               <Menu size={24} />

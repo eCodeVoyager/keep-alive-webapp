@@ -13,11 +13,17 @@ import { Link } from "react-router-dom";
 
 const Sidebar = ({ isOpen, toggleSidebar, handleLogout, pathname }) => (
   <div
-    className={`ml-[20px] mt-[2dvh] h-[96dvh] bg-gray-800 rounded-xl flex flex-col items-center py-4 transition-all duration-300 ${
+    className={`ml-[20px] mt-[2dvh] h-[96dvh] bg-gray-800 rounded-xl flex flex-col items-center  py-4 transition-all duration-300 ${
       isOpen ? "w-64" : "w-16"
     }`}
   >
-    <div className="flex items-center justify-between w-full px-4 mb-6">
+    <div
+      className={`${
+        isOpen
+          ? "flex items-center justify-between w-full px-4 mb-6"
+          : "justify-center"
+      }`}
+    >
       {isOpen && (
         <Link to={routes.dashboard}>
           <div className="flex gap-3 text-white font-bold text-2xl ">
@@ -58,7 +64,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout, pathname }) => (
       />
     </nav>
 
-    <div className="w-full px-4 mt-auto">
+    <div className={`${isOpen ? "w-full px-4 mt-auto" : ""}`}>
       <SidebarLink
         icon={<LogOut size={24} />}
         label="Logout"
