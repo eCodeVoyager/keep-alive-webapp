@@ -3,6 +3,8 @@ const Queue = require("bull");
 const axios = require("axios");
 const logService = require("../modules/logs/services/logService");
 const convertToCron = require("../utils/convertToCorn");
+const sendEmail = require("../modules/email/services/emailService");
+const websiteService = require("../modules/websites/services/websiteService");
 
 const pingQueue = new Queue("pingQueue", {
   redis: {
@@ -14,11 +16,11 @@ const pingQueue = new Queue("pingQueue", {
 });
 
 // Function to add periodic jobs to Bull Queue
-const schedulePing = (userId, url, interval) => {
+const schedulePing = (user_email, url, interval) => {
   const cronInterval = convertToCron(interval);
   const encodedUrl = encodeURIComponent(url);
   pingQueue.add(
-    { userId, url },
+    { user_email, url },
     {
       repeat: { cron: cronInterval },
       jobId: encodedUrl,
@@ -29,7 +31,7 @@ const schedulePing = (userId, url, interval) => {
 const processPingJobs = () => {
   // Processing the ping jobs in Bull queue
   pingQueue.process(async (job, done) => {
-    const { url } = job.data;
+    const { url, user_email } = job.data;
     try {
       const start = Date.now();
       const response = await axios.get(url);
@@ -42,11 +44,20 @@ const processPingJobs = () => {
       });
       done(null, response);
     } catch (error) {
-      await logService.createLog({
-        url,
-        status: error.response?.status || 0,
-        responseTime: 0,
-      });
+      if (error.isAxiosError) {
+        let website = await websiteService.getWebsites({ url });
+        website = website[0];
+        await websiteService.updateWebsite(website._id, { status: "offline" });
+        await sendEmail(user_email, "Server Down", "serverDown", {
+          url,
+          status: error.response?.status || 0,
+        });
+        await logService.createLog({
+          url,
+          status: error.response?.status || 0,
+          responseTime: 0,
+        });
+      }
       done(error);
       throw error;
     }

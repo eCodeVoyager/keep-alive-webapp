@@ -10,6 +10,9 @@ const websiteSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    owner_email: {
+      type: String,
+    },
     ping_time: {
       type: String,
     },

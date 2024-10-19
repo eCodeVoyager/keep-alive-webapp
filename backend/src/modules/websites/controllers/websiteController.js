@@ -9,18 +9,15 @@ const axios = require("axios");
 const addWebsite = async (req, res, next) => {
   try {
     const websiteData = req.body;
-    const isValid = await axios.get(websiteData.url);
-    if (isValid.status !== 200) {
-      return next(
-        new ApiError(httpStatus.BAD_REQUEST, "Invalid website URL provided")
-      );
-    }
+    await axios.get(websiteData.url);
+
     const website = await websiteService.addWebsite({
       ...websiteData,
       owner: req.user.id,
+      owner_email: req.user.email,
     });
 
-    schedulePing(website.owner, website.url, website.ping_time);
+    schedulePing(website.email, website.url, website.ping_time);
     return res
       .status(httpStatus.CREATED)
       .json(
@@ -31,6 +28,11 @@ const addWebsite = async (req, res, next) => {
         )
       );
   } catch (error) {
+    if (error.isAxiosError) {
+      return next(
+        new ApiError(httpStatus.BAD_GATEWAY, "Error connecting to website")
+      );
+    }
     return next(error);
   }
 };

@@ -13,6 +13,7 @@ const logSchema = new mongoose.Schema({
   pingAt: {
     type: Date,
     default: Date.now,
+    expires: 60 * 60 * 24 * 3, // 3 days
   },
 });
 
