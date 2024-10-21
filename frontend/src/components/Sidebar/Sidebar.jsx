@@ -40,7 +40,11 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout, pathname }) => (
       </button>
     </div>
 
-    <nav className="flex-1 flex flex-col items-center space-y-2 w-full px-4 pt-3">
+    <nav
+      className={`flex-1 flex flex-col items-center space-y-2 w-full px-4 pt-3 ${
+        isOpen ? "" : "!pt-6"
+      }`}
+    >
       <SidebarLink
         icon={<Home size={24} />}
         label="Dashboard"
