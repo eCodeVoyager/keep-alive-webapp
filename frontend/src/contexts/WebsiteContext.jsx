@@ -1,20 +1,21 @@
 import { createContext } from "react";
 import { useState } from "react";
 
-const WebsiteContext = createContext();
+export const WebsiteContext = createContext();
 
-const WebsiteProvider = ({ children }) => {
+export const WebsiteProvider = ({ children }) => {
   const [websites, setWebsites] = useState([]);
+  const [isApiCalled, setIsApiCalled] = useState(false);
   return (
     <WebsiteContext.Provider
       value={{
         websites,
         setWebsites,
+        isApiCalled,
+        setIsApiCalled,
       }}
     >
       {children}
     </WebsiteContext.Provider>
   );
 };
-
-export { WebsiteContext, WebsiteProvider };

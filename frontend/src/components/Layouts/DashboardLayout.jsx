@@ -4,19 +4,18 @@ import Sidebar from "../Sidebar/Sidebar";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import LogsModal from "../Dashboard/LogsModal";
+import { SidebarContext } from "../../contexts/SidebarContext";
 
 const DashboardLayout = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServer, setSelectedServer] = useState(null);
   const [serverLogs, setServerLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const { logout } = useContext(AuthContext);
+  const { sidebar, toggleSidebar } = useContext(SidebarContext);
   const navigate = useNavigate();
   const location = useLocation();
-
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const handleLogout = () => {
     logout();
@@ -46,7 +45,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
       <Sidebar
-        isOpen={isSidebarOpen}
+        isOpen={sidebar}
         handleLogout={handleLogout}
         toggleSidebar={toggleSidebar}
         pathname={location.pathname}
