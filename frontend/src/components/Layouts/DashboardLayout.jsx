@@ -5,6 +5,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import LogsModal from "../Dashboard/LogsModal";
 import { SidebarContext } from "../../contexts/SidebarContext";
+import { WebsiteContext } from "../../contexts/WebsiteContext";
 
 const DashboardLayout = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,11 +15,14 @@ const DashboardLayout = ({ children }) => {
 
   const { logout } = useContext(AuthContext);
   const { sidebar, toggleSidebar } = useContext(SidebarContext);
+  const { setWebsites, setIsApiCalled } = useContext(WebsiteContext);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogout = () => {
     logout();
+    setWebsites([]);
+    setIsApiCalled(false);
     navigate("/login");
   };
 

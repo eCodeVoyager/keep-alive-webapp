@@ -1,7 +1,16 @@
 import React, { useContext, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { User, Mail, Lock, Eye, EyeOff, Edit2, Check } from "lucide-react";
+import {
+  User,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  Edit2,
+  Check,
+  Bell,
+} from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Button } from "../components/Shared/Button";
@@ -44,6 +53,26 @@ const UserSettings = () => {
     }
   };
 
+  const handleEmailAlertsToggle = async (emailAlerts) => {
+    try {
+      // Simulated API call to update email alerts preference
+      console.log("Email Alerts: ", emailAlerts);
+      const response = await UserService.updateEmailAlerts(
+        user._id,
+        emailAlerts
+      );
+      setUser({
+        ...user,
+        emailAlerts: response.data.website_offline_alart,
+      });
+      toast.success("Email preferences updated successfully");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Error updating email preferences"
+      );
+    }
+  };
+
   const handlePasswordSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       await AuthService.change_password({
@@ -71,10 +100,11 @@ const UserSettings = () => {
         <div className="flex flex-col gap-6">
           {/* Personal Information */}
           <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
-            <h3 className="text-xl font-semibold text-white mb-4">
-              Personal Information
+            <h3 className="text-xl font-semibold text-white mb-6">
+              Personal Information & Preferences
             </h3>
-            <div className="flex w-full justify-between ">
+            <div className="flex justify-between items-center space-y-4">
+              {/* Name Field */}
               <Formik
                 initialValues={{ name: user?.name || "" }}
                 validationSchema={nameValidationSchema}
@@ -126,9 +156,25 @@ const UserSettings = () => {
                 )}
               </Formik>
 
-              <div className="flex items-center space-x-2">
-                <Mail className="h-5 w-5 text-gray-400" />
+              {/* Email Field */}
+              <div className="flex !justify-center items-center !mt-0 gap-2">
+                <Mail className="h-5 w-5 text-gray-400 " />
                 <span className="text-white">{user?.email}</span>
+              </div>
+
+              {/* Email Alerts Toggle */}
+              <div className="flex !justify-center items-center !mt-0 gap-2">
+                <Bell className="h-5 w-5 text-gray-400" />
+                <span className="text-white mr-2">Email Alerts</span>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={user?.website_offline_alart}
+                    onChange={(e) => handleEmailAlertsToggle(e.target.checked)}
+                  />
+                  <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                </label>
               </div>
             </div>
           </div>
