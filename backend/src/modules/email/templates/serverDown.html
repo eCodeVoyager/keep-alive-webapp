@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verify Your Keep-Alive Email</title>
+    <title>Server Down Notification</title>
   </head>
   <body
     style="
@@ -41,7 +41,7 @@
               <td
                 style="
                   height: 4px;
-                  background: linear-gradient(to right, #10b981, #3b82f6);
+                  background: linear-gradient(to right, #f97316, #ef4444);
                 "
               ></td>
             </tr>
@@ -53,8 +53,8 @@
                   style="
                     background: linear-gradient(
                       135deg,
-                      #10b981 0%,
-                      #3b82f6 100%
+                      #f97316 0%,
+                      #ef4444 100%
                     );
                     width: 80px;
                     height: 80px;
@@ -62,12 +62,12 @@
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+                    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
                   "
                 >
                   <img
-                    src="https://i.ibb.co.com/yYcPcK0/vital-signs-48dp-E8-EAED-FILL0-wght700-GRAD200-opsz48.png"
-                    alt="Keep-Alive Logo"
+                    src="https://i.ibb.co/yYcPcK0/vital-signs-48dp-E8-EAED-FILL0-wght700-GRAD200-opsz48.png"
+                    alt="Alert Icon"
                     width="48"
                     height="48"
                     style="
@@ -91,7 +91,7 @@
                     margin: 0 0 20px;
                   "
                 >
-                  Verify Your Email
+                  Server Down Alert!
                 </h1>
                 <p
                   style="
@@ -101,31 +101,11 @@
                     line-height: 1.6;
                   "
                 >
-                  Thanks for signing up! Please use the following One-Time
-                  Password (OTP) to verify your email address:
+                  We have detected that your server at
+                  <strong>{{ url }}</strong>
+                  is currently down. The server returned a status code of
+                  <strong>{{ statusCode }}</strong>.
                 </p>
-
-                <div
-                  style="
-                    background-color: #1f2937;
-                    border-radius: 8px;
-                    padding: 20px;
-                    text-align: center;
-                    margin-bottom: 30px;
-                  "
-                >
-                  <p
-                    style="
-                      color: #10b981;
-                      font-size: 32px;
-                      font-weight: bold;
-                      margin: 0;
-                      letter-spacing: 5px;
-                    "
-                  >
-                    {{otp}}
-                  </p>
-                </div>
 
                 <p
                   style="
@@ -135,9 +115,42 @@
                     line-height: 1.6;
                   "
                 >
-                  This OTP will expire in 10 minutes. If you didn't request this
-                  verification, please ignore this email.
+                  Please check the server logs for more information.
                 </p>
+
+                <!-- CTA Button -->
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellspacing="0"
+                  cellpadding="0"
+                  border="0"
+                >
+                  <tr>
+                    <td align="center" style="padding: 0 0 40px">
+                      <a
+                        href="#"
+                        style="
+                          display: inline-block;
+                          background: linear-gradient(
+                            to right,
+                            #f97316,
+                            #ef4444
+                          );
+                          color: white;
+                          text-decoration: none;
+                          padding: 16px 32px;
+                          border-radius: 8px;
+                          font-weight: bold;
+                          text-transform: uppercase;
+                          letter-spacing: 1px;
+                          box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+                        "
+                        >Check Ping Logs</a
+                      >
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
 

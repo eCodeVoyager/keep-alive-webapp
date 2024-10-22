@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    website_offline_alart: {
+      type: Boolean,
+      default: true,
+    },
     refreshToken: {
       type: String,
       select: false,

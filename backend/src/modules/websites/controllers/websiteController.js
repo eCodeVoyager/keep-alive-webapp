@@ -17,7 +17,7 @@ const addWebsite = async (req, res, next) => {
       owner_email: req.user.email,
     });
 
-    schedulePing(website.email, website.url, website.ping_time);
+    schedulePing(website.owner_email, website.url, website.ping_time);
     return res
       .status(httpStatus.CREATED)
       .json(

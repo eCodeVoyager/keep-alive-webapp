@@ -22,7 +22,7 @@ const createFeedback = async (req, res, next) => {
         stars: starsHTML,
         rating: feedback.rating,
         comment: feedback.comment,
-        user: feedback.user_email,
+        user_email: feedback.user_email,
       }
     );
     return res

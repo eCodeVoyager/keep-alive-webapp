@@ -7,6 +7,7 @@ const updateUser = {
     name: Joi.string().min(3).max(30),
     email: Joi.string().email(),
     isVerified: Joi.boolean(),
+    website_offline_alart: Joi.boolean(),
   }),
 };
 

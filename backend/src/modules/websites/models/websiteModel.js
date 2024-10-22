@@ -19,6 +19,14 @@ const websiteSchema = new mongoose.Schema(
     status: {
       type: String,
     },
+    notify_offline: {
+      type: Boolean,
+      default: true,
+    },
+    offline_ping_count: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
