@@ -55,8 +55,6 @@ const UserSettings = () => {
 
   const handleEmailAlertsToggle = async (emailAlerts) => {
     try {
-      // Simulated API call to update email alerts preference
-      console.log("Email Alerts: ", emailAlerts);
       const response = await UserService.updateEmailAlerts(
         user._id,
         emailAlerts

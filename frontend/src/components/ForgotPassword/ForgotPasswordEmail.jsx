@@ -19,8 +19,9 @@ const ForgotPasswordEmail = ({ onSubmit }) => {
       onSubmit(values.email);
       toast.success("Reset link sent successfully");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to send reset link");
+      toast.error(
+        error?.response?.data?.message || "Failed to send reset link. Try again."
+      );
     } finally {
       setSubmitting(false);
     }
