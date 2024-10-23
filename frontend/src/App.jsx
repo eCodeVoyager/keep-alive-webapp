@@ -14,7 +14,7 @@ import LearnMore from "./pages/LearnMore";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsAndConditions";
 import ContactPage from "./pages/ContactPage";
-import FAQPage from "./pages/FaqPage";
+import FAQPage from "./pages/FAQPage";
 
 const App = () => {
   return (
