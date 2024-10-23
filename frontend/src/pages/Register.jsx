@@ -299,6 +299,17 @@ const KeepAliveRegisterForm = () => {
           <VerifyEmailOTP email={email} onVerified={handleOTPVerified} />
         )}
       </div>
+      <footer className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center text-gray-400 text-sm">
+        <p>
+          &copy; 2024 Keep-Alive. All rights reserved.{" "}
+          <Link
+            to="/terms-of-service"
+            className="font-medium text-green-400 hover:text-green-300"
+          >
+            Terms of Service
+          </Link>
+        </p>
+      </footer>
     </motion.div>
   );
 };

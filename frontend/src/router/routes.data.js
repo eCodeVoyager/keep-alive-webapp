@@ -1,6 +1,3 @@
-import { em } from "framer-motion/client";
-import EmailVerificationRequired from "../pages/EmailVerificationRequired";
-
 export const routes = {
   hero: "/",
   login: "/login",
@@ -9,6 +6,10 @@ export const routes = {
   forgotPassword: "/forgot-password",
   settings: "/settings",
   feedback: "/feedback",
-  EmailVerificationRequired: "/email-verification",
-  learnMore: "/learn-more",
+  email_verification_required: "/email-verification",
+  learn_more: "/learn-more",
+  privacy_policy: "/privacy-policy",
+  tearms_conditions: "/terms-conditions",
+  contact: "/contact",
+  faq: "/faq",
 };
