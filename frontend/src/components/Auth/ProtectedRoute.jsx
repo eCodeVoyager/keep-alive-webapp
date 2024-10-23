@@ -26,7 +26,7 @@ const ProtectedRoute = ({ children }) => {
       try {
         const user = await AuthService.me();
         if (user.data[0].isVerified === false) {
-          navigate(routes.hero);
+          navigate(routes.EmailVerificationRequired);
           return;
         }
         setUser(user.data[0]);

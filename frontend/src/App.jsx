@@ -9,6 +9,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import NotFoundPage from "./components/ErrorPages/NotFoundPage";
 import UserSettings from "./pages/UserSettings";
 import Feedback from "./pages/Feedback";
+import EmailVerificationRequired from "./pages/EmailVerificationRequired";
+import LearnMore from "./pages/LearnMore";
 
 const App = () => {
   return (
@@ -19,6 +21,11 @@ const App = () => {
           <Route path={routes.login} element={<Login />} />
           <Route path={routes.register} element={<Register />} />
           <Route path={routes.forgotPassword} element={<ForgotPassword />} />
+          <Route
+            path={routes.EmailVerificationRequired}
+            element={<EmailVerificationRequired />}
+          />
+          <Route path={routes.learnMore} element={<LearnMore />} />
           <Route
             path={routes.dashboard}
             element={
