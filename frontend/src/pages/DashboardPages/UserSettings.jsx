@@ -13,11 +13,11 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { Button } from "../components/Shared/Button";
-import { UserContext } from "../contexts/UserContext";
-import UserService from "../services/userService";
-import DashboardLayout from "../components/Layouts/DashboardLayout";
-import AuthService from "../services/authService";
+import { Button } from "../../components/Shared/Button";
+import { UserContext } from "../../contexts/UserContext";
+import UserService from "../../services/userService";
+import DashboardLayout from "../../components/Layouts/DashboardLayout";
+import AuthService from "../../services/authService";
 
 const nameValidationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -59,12 +59,16 @@ const UserSettings = () => {
         user._id,
         emailAlerts
       );
-      setUser({
-        ...user,
-        emailAlerts: response.data.website_offline_alart,
-      });
+      setUser((prevUser) => ({
+        ...prevUser,
+        website_offline_alart: response.data.website_offline_alart,
+      }));
       toast.success("Email preferences updated successfully");
     } catch (error) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        website_offline_alart: !prevUser.website_offline_alart,
+      }));
       toast.error(
         error?.response?.data?.message || "Error updating email preferences"
       );

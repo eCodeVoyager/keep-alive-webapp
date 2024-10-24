@@ -1,20 +1,21 @@
 import { Routes, Route } from "react-router-dom";
 import Hero from "./pages/Hero";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import Login from "./pages/AuthPages/Login";
+import Register from "./pages/AuthPages/Register";
+import Dashboard from "./pages/DashboardPages/Dashboard";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import { routes } from "./router/routes.data";
-import ForgotPassword from "./pages/ForgotPassword";
+import ForgotPassword from "./pages/AuthPages/ForgotPassword";
 import NotFoundPage from "./pages/ErrorPages/NotFoundPage";
-import UserSettings from "./pages/UserSettings";
-import Feedback from "./pages/Feedback";
-import EmailVerificationRequired from "./pages/EmailVerificationRequired";
+import UserSettings from "./pages/DashboardPages/UserSettings";
+import Feedback from "./pages/DashboardPages/Feedback";
+import EmailVerificationRequired from "./pages/AuthPages/EmailVerificationRequired";
 import LearnMore from "./pages/LearnMore";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsAndConditions";
 import ContactPage from "./pages/ContactPage";
 import FAQPage from "./pages/FAQPage";
+import LandingPage from "./pages/Test";
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
           <Route path={routes.faq} element={<FAQPage />} />
           <Route path={routes.learn_more} element={<LearnMore />} />
           <Route path={routes.privacy_policy} element={<PrivacyPolicy />} />
+          <Route path="test" element={<LandingPage />} />
 
           <Route
             path={routes.tearms_conditions}

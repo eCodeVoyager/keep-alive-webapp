@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import ServerCard from "../components/Dashboard/ServerCard";
-import LogsModal from "../components/Dashboard/LogsModal";
-import ServerForm from "../components/Dashboard/ServerForm";
-import ServerService from "../services/serverService";
-import logService from "../services/logService";
+import ServerCard from "../../components/Dashboard/ServerCard";
+import LogsModal from "../../components/Dashboard/LogsModal";
+import ServerForm from "../../components/Dashboard/ServerForm";
+import ServerService from "../../services/serverService";
+import logService from "../../services/logService";
 import toast from "react-hot-toast";
-import DashboardLayout from "../components/Layouts/DashboardLayout";
+import DashboardLayout from "../../components/Layouts/DashboardLayout";
 import { motion } from "framer-motion";
-import { WebsiteContext } from "../contexts/WebsiteContext";
-import ServerCardSkeleton from "../components/SkeletonLoaders/ServerCardSkeleton";
+import { WebsiteContext } from "../../contexts/WebsiteContext";
+import ServerCardSkeleton from "../../components/SkeletonLoaders/ServerCardSkeleton";
 import { Info } from "lucide-react";
 
 const Dashboard = () => {
@@ -144,3 +144,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

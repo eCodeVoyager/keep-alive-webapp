@@ -5,10 +5,10 @@ import { Mail, Lock, Eye, EyeOff, User, Share2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "../components/Shared/Button";
-import Logo from "../components/Shared/Logo";
-import VerifyEmailOTP from "../components/VerifyEmail/VerifyEmailOTP";
-import AuthService from "../services/authService";
+import { Button } from "../../components/Shared/Button";
+import Logo from "../../components/Shared/Logo";
+import VerifyEmailOTP from "../../components/VerifyEmail/VerifyEmailOTP";
+import AuthService from "../../services/authService";
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),

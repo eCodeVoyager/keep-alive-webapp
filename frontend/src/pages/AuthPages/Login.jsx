@@ -5,12 +5,12 @@ import { Mail, Lock, Eye, EyeOff, Share2, LucideLoader } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "../components/Shared/Button";
-import Logo from "../components/Shared/Logo";
-import { AuthContext } from "../contexts/AuthContext";
-import { UserContext } from "../contexts/UserContext";
-import authService from "../services/authService";
-import { routes } from "../router/routes.data";
+import { Button } from "../../components/Shared/Button";
+import Logo from "../../components/Shared/Logo";
+import { AuthContext } from "../../contexts/AuthContext";
+import { UserContext } from "../../contexts/UserContext";
+import authService from "../../services/authService";
+import { routes } from "../../router/routes.data";
 import cookies from "js-cookie";
 
 const LoginSchema = Yup.object().shape({

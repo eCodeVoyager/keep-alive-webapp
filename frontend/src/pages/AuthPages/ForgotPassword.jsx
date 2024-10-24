@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Logo from "../components/Shared/Logo";
-import ForgotPasswordEmail from "../components/ForgotPassword/ForgotPasswordEmail";
-import ForgotPasswordOTP from "../components/ForgotPassword/ForgotPasswordOTP";
-import ForgotPasswordReset from "../components/ForgotPassword/ForgotPasswordReset";
+import Logo from "../../components/Shared/Logo";
+import ForgotPasswordEmail from "../../components/ForgotPassword/ForgotPasswordEmail";
+import ForgotPasswordOTP from "../../components/ForgotPassword/ForgotPasswordOTP";
+import ForgotPasswordReset from "../../components/ForgotPassword/ForgotPasswordReset";
 import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {

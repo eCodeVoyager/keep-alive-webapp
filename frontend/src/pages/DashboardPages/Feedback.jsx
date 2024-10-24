@@ -4,9 +4,9 @@ import * as Yup from "yup";
 import { Star, Send } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { Button } from "../components/Shared/Button";
-import DashboardLayout from "../components/Layouts/DashboardLayout";
-import FeedbackService from "../services/feedbackService";
+import { Button } from "../../components/Shared/Button";
+import DashboardLayout from "../../components/Layouts/DashboardLayout";
+import FeedbackService from "../../services/feedbackService";
 
 const feedbackValidationSchema = Yup.object().shape({
   rating: Yup.number().required("Please select a rating"),

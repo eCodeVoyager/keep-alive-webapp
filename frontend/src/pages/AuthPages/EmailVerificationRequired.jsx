@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Mail, ArrowRight, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/Shared/Button";
+import { Button } from "../../components/Shared/Button";
 import { toast } from "react-hot-toast";
 
 const EmailVerificationRequired = () => {
