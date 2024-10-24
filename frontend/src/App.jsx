@@ -15,7 +15,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsAndConditions";
 import ContactPage from "./pages/ContactPage";
 import FAQPage from "./pages/FAQPage";
-import LandingPage from "./pages/Test";
+
 
 const App = () => {
   return (
@@ -34,7 +34,6 @@ const App = () => {
           <Route path={routes.faq} element={<FAQPage />} />
           <Route path={routes.learn_more} element={<LearnMore />} />
           <Route path={routes.privacy_policy} element={<PrivacyPolicy />} />
-          <Route path="test" element={<LandingPage />} />
 
           <Route
             path={routes.tearms_conditions}
