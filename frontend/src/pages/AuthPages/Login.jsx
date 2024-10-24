@@ -89,6 +89,12 @@ const KeepAliveLoginForm = () => {
     }
   };
 
+  const handleProviderLogin = async () => {
+    toast.error("Feature coming soon!", {
+      icon: "🚧",
+    });
+  };
+
   return (
     <motion.div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md relative">
@@ -243,6 +249,7 @@ const KeepAliveLoginForm = () => {
               key={provider}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleProviderLogin}
               className="w-full inline-flex justify-center py-2 px-4 border border-gray-700 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"
             >
               {provider === "Google" ? (

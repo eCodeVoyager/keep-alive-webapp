@@ -190,11 +190,21 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="border-t border-gray-800 py-6 text-center">
-            <p className="text-gray-400 text-sm flex items-center justify-center">
-              Made with <Heart className="w-4 h-4 mx-1 text-red-500" /> by Our
-              Team © {new Date().getFullYear()}
-            </p>
+          <div className="w-full border-t border-gray-800">
+            <div className="px-4 h-16 flex items-center justify-center space-x-1 text-sm text-gray-400">
+              <span>Made with</span>
+              <Heart className="w-4 h-4 text-red-500" />
+              <span>by</span>
+              <a
+                href="https://github.com/eCodeVoyager"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-red-400 hover:text-red-300 transition-colors duration-200"
+              >
+                Ehsan
+              </a>
+              <span>&copy; {new Date().getFullYear()}</span>
+            </div>
           </div>
         </motion.footer>
       </div>

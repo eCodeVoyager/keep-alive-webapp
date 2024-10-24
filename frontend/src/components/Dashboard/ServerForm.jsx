@@ -44,6 +44,8 @@ const ServerForm = ({ addServer, isLoading }) => {
           <Field
             as="select"
             name="interval"
+            title="Choose interval"
+            aria-label="Choose interval"
             className="max-h-10 px-2 py-2 bg-gray-800 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none border-gray-800 border-r-8"
           >
             <option value="5m">5m</option>
