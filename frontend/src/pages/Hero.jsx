@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Zap, Coffee, Code, ArrowRight } from "lucide-react";
+import { Zap, Coffee, Code, ArrowRight, Heart } from "lucide-react";
 import AnimatedLogo from "../components/Shared/AnimatedLogo";
 
 const Hero = () => {
@@ -29,7 +29,8 @@ const Hero = () => {
         <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-green-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000"></div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-12 md:py-20 flex flex-col items-center justify-center min-h-screen">
+      <div className="relative z-10 container mx-auto px-4 py-12 md:py-20 !pb-0 md:!pb-0 flex flex-col items-center justify-between min-h-screen">
+        {/* Main Content (your existing code) */}
         <motion.div
           variants={container}
           initial="hidden"
@@ -154,6 +155,48 @@ const Hero = () => {
             ))}
           </motion.div>
         </motion.div>
+
+        {/* Footer Section */}
+        <motion.footer
+          variants={container}
+          className="w-full max-w-6xl mx-auto mt-16 border-t border-gray-800"
+        >
+          <div className="relative z-10 container mx-auto px-4">
+            <div className="flex flex-wrap justify-center gap-6 py-6">
+              <Link
+                to="/privacy-policy"
+                className="text-gray-400 hover:text-green-400 transition-colors"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                to="/terms-conditions"
+                className="text-gray-400 hover:text-green-400 transition-colors"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                to="/contact"
+                className="text-gray-400 hover:text-green-400 transition-colors"
+              >
+                Contact
+              </Link>
+              <Link
+                to="/faq"
+                className="text-gray-400 hover:text-green-400 transition-colors"
+              >
+                FAQ
+              </Link>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 py-6 text-center">
+            <p className="text-gray-400 text-sm flex items-center justify-center">
+              Made with <Heart className="w-4 h-4 mx-1 text-red-500" /> by Our
+              Team © {new Date().getFullYear()}
+            </p>
+          </div>
+        </motion.footer>
       </div>
     </div>
   );

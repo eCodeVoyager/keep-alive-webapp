@@ -118,7 +118,7 @@ const PrivacyPolicy = () => {
                 <Shield className="w-5 h-5 ml-2" />
               </Link>
               <Link
-                to="/dashboard/settings"
+                to="/settings"
                 className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center"
               >
                 Privacy Settings

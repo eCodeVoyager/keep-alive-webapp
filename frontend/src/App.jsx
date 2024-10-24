@@ -21,6 +21,7 @@ const App = () => {
   return (
     <>
       <Routes>
+        
         <Route path="/">
           <Route path={routes.hero} element={<Hero />} />
           <Route path={routes.login} element={<Login />} />
@@ -64,7 +65,6 @@ const App = () => {
             }
           />
         </Route>
-
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
