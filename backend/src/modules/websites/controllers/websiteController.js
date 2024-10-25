@@ -8,11 +8,16 @@ const axios = require("axios");
 
 const addWebsite = async (req, res, next) => {
   try {
-    const websiteData = req.body;
-    await axios.get(websiteData.url);
+    let getWebsite = await websiteService.getWebsites({ url: req.body.url });
+    if (getWebsite.length > 0) {
+      return next(
+        new ApiError(httpStatus.BAD_REQUEST, "URL already exists in our system")
+      );
+    }
+    await axios.get(req.body.url);
 
     const website = await websiteService.addWebsite({
-      ...websiteData,
+      ...req.body,
       owner: req.user.id,
       owner_email: req.user.email,
     });
