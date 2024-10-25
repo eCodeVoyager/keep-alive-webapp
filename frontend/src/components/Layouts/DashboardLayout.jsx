@@ -7,6 +7,8 @@ import LogsModal from "../Dashboard/LogsModal";
 import { SidebarContext } from "../../contexts/SidebarContext";
 import { WebsiteContext } from "../../contexts/WebsiteContext";
 
+import { ScrollRestoration } from "react-router-dom";
+
 const DashboardLayout = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServer, setSelectedServer] = useState(null);

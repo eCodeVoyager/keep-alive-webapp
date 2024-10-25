@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Plus, Loader } from "lucide-react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
@@ -56,10 +56,19 @@ const ServerForm = ({ addServer, isLoading }) => {
           </Field>
           <button
             type="submit"
-            disabled={isLoading}
-            className="max-h-10 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300 flex items-center"
+            className="max-h-10 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300 flex items-center justify-center"
           >
-            <Plus className="mr-2" /> Add Server
+            {isLoading ? (
+              <>
+                <Loader className="animate-spin mr-2 w-5 h-5" />
+                Add Server
+              </>
+            ) : (
+              <>
+                <Plus className="mr-2 w-5 h-5" />
+                Add Server
+              </>
+            )}
           </button>
         </Form>
       )}

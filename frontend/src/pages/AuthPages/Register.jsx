@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Mail, Lock, Eye, EyeOff, User, Share2 } from "lucide-react";
@@ -9,6 +9,10 @@ import { Button } from "../../components/Shared/Button";
 import Logo from "../../components/Shared/Logo";
 import VerifyEmailOTP from "../../components/VerifyEmail/VerifyEmailOTP";
 import AuthService from "../../services/authService";
+import cookies from "js-cookie";
+import { routes } from "../../router/routes.data";
+import Loader from "../../components/Shared/Loader";
+
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
@@ -23,9 +27,18 @@ const RegisterSchema = Yup.object().shape({
 const KeepAliveRegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = cookies.get("authToken");
+    if (token) {
+      navigate(routes.dashboard);
+    }
+    setLoading(false);
+  }, [navigate]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
@@ -74,7 +87,9 @@ const KeepAliveRegisterForm = () => {
       icon: "🚧",
     });
   };
-
+  if (loading) {
+    <Loader />;
+  }
   return (
     <motion.div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md relative">

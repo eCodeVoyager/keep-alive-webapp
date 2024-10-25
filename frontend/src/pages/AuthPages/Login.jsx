@@ -12,6 +12,7 @@ import { UserContext } from "../../contexts/UserContext";
 import authService from "../../services/authService";
 import { routes } from "../../router/routes.data";
 import cookies from "js-cookie";
+import Loader from "../../components/Shared/Loader";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -35,13 +36,7 @@ const KeepAliveLoginForm = () => {
   }, [navigate]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-        <motion.div animate={{ rotate: 360 }}>
-          <LucideLoader className="h-16 w-16 text-green-500" />
-        </motion.div>
-      </div>
-    );
+    <Loader />;
   }
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -64,12 +59,20 @@ const KeepAliveLoginForm = () => {
 
         // Redirect to dashboard
         navigate(routes.dashboard);
+
+        toast.success("Logged in successfully");
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Error logging in");
+      toast.error(
+        error?.response?.data?.message ===
+          '"password" length must be at least 6 characters long'
+          ? "Invalid email or password"
+          : error?.response?.data?.message || "Error logging in"
+      );
     } finally {
-      setSubmitting(false); // Stop form submission state
+      setSubmitting(false);
     }
+   
   };
 
   const handleShare = () => {

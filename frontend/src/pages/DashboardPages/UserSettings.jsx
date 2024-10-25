@@ -63,7 +63,11 @@ const UserSettings = () => {
         ...prevUser,
         website_offline_alart: response.data.website_offline_alart,
       }));
-      toast.success("Email preferences updated successfully");
+      if (emailAlerts) {
+        toast.success("Email alerts enabled");
+      } else {
+        toast.success("Email alerts disabled");
+      }
     } catch (error) {
       setUser((prevUser) => ({
         ...prevUser,
