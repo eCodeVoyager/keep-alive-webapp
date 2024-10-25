@@ -13,12 +13,22 @@ const getCorsOrigin = () => {
   // If there are multiple URLs, split them into an array
   const urls = clientUrls.split(",");
 
-  // Allow credentials only for specified origins
   return function (origin, callback) {
-    if (urls.includes(origin) || !origin) {
+    // Block requests without an Origin header
+    if (!origin) {
+      callback(
+        new ApiError(403, "Not allowed by CORS - Origin not in whitelist")
+      );
+      return;
+    }
+
+    // Allow only specified origins
+    if (urls.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new ApiError(403, "Not allowed by CORS"));
+      callback(
+        new ApiError(403, "Not allowed by CORS - Origin not in whitelist")
+      );
     }
   };
 };
