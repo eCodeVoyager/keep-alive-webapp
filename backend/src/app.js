@@ -11,6 +11,7 @@ const express = require("express");
 const redis = require("./config/redis");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
+const getCorsOrigin = require("./utils/getCorsOrigin");
 const mongoSanitize = require("express-mongo-sanitize");
 
 // Import routes and middlewares
@@ -33,7 +34,10 @@ const allMiddlewares = [
   hpp(),
   cookieParser(),
   express.json(),
-  cors(),
+  cors({
+    origin: getCorsOrigin(),
+    credentials: true,
+  }),
 ];
 
 // Use middlewares
