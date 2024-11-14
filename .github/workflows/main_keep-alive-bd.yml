@@ -67,5 +67,4 @@ jobs:
         with:
           app-name: 'keep-alive-bd'
           slot-name: 'Production'
-          package: './backend'
-          
+          package: './backend' # Corrected path without extra comments
