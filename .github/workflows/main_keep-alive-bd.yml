@@ -1,4 +1,4 @@
-name: Build and deploy Node.js app to Azure Web App - Sotto-Jachai
+name: Build and deploy Node.js app to Azure Web App - keep-alive-bd
 
 on:
   push:
@@ -64,6 +64,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: "Sotto-Jachai"
+          app-name: "keep-alive-bd"
           slot-name: "Production"
           package: .  # Ensure this points to the unzipped files
