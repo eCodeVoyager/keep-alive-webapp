@@ -79,7 +79,7 @@ const processPingJobs = () => {
           website = website[0];
           let user = await userService.getUsers({ email: user_email });
           user = user[0];
-
+          console.log(website);
           website.offline_ping_count += 1;
           await websiteService.updateWebsite(website._id, {
             status: "offline",
