@@ -1,46 +1,96 @@
-//src/utils/errorHandler.js
 const ApiError = require("./apiError");
 
+/**
+ * Handle 404 errors for routes not found
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
 const notFoundHandler = (req, res, next) => {
-  const error = new ApiError(404, "Route Not Found");
+  const error = new ApiError(404, `Route Not Found - ${req.originalUrl}`);
   next(error);
 };
 
+/**
+ * Global error handler for all express routes
+ * @param {Error} err - Error object
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
 const errorHandler = (err, req, res, next) => {
+  // Default error values
+  let statusCode = err.statusCode || 500;
+  let message = err.message || "Something went wrong";
+  let errors = err.errors || [];
+  let errorCode = err.errorCode || "SERVER_ERROR";
+
+  // Log errors in development
+  if (process.env.NODE_ENV === "development") {
+    console.error("ERROR:", err);
+  }
+
   // Handle Mongoose validation errors
   if (err.name === "ValidationError") {
-    const messages = Object.values(err.errors).map((val) => val.message);
-    err = new ApiError(400, "Validation Error", messages);
+    statusCode = 400;
+    message = "Validation Error";
+    errorCode = "VALIDATION_ERROR";
+    errors = Object.values(err.errors).map((val) => ({
+      field: val.path,
+      message: val.message,
+    }));
   }
 
   // Handle Mongoose duplicate key errors
-  if (err.code && err.code === 11000) {
-    const message = "Duplicate field value entered";
-    err = new ApiError(400, message);
+  if (err.code === 11000) {
+    statusCode = 400;
+    message = "Duplicate field value entered";
+    errorCode = "DUPLICATE_KEY";
+
+    // Extract field name from error message
+    const field = Object.keys(err.keyValue)[0];
+    errors = [
+      {
+        field,
+        message: `${field} already exists with value ${err.keyValue[field]}`,
+      },
+    ];
   }
 
-  // Handle other Mongoose errors
+  // Handle Mongoose cast errors (invalid IDs)
   if (err.name === "CastError") {
-    const message = `Resource not found with id of ${err.value}`;
-    err = new ApiError(404, message);
+    statusCode = 400;
+    message = `Invalid ${err.path}: ${err.value}`;
+    errorCode = "INVALID_ID";
+    errors = [
+      {
+        field: err.path,
+        message: `${err.path} is not a valid ID`,
+      },
+    ];
   }
 
-  // Check if the error is an instance of ApiError
-  if (err instanceof ApiError) {
-    return res.status(err.statusCode).json({
-      success: err.success,
-      message: err.message,
-      errors: err.errors,
-    });
+  // Handle JWT errors
+  if (err.name === "JsonWebTokenError") {
+    statusCode = 401;
+    message = "Invalid token";
+    errorCode = "INVALID_TOKEN";
   }
 
-  // Log the error for debugging purposes
-  console.error(err);
+  if (err.name === "TokenExpiredError") {
+    statusCode = 401;
+    message = "Token expired";
+    errorCode = "TOKEN_EXPIRED";
+  }
 
-  // Generic error handler for unexpected errors
-  res.status(500).json({
+  // Return error response
+  res.status(statusCode).json({
     success: false,
-    message: "Internal Server Error",
+    status: statusCode,
+    message,
+    errorCode,
+    errors: errors.length > 0 ? errors : undefined,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
   });
 };
 

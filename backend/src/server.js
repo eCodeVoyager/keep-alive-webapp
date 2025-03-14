@@ -1,29 +1,90 @@
 // src/server.js
-
-// Imports
+require("dotenv").config();
 const app = require("./app");
-const ConnectDB = require("./database/mongoDB");
-const server = require("http").createServer(app);
-const checkEnvVariables = require("./utils/envChecker");
+const http = require("http");
+const { connectDB } = require("./database/mongoDB");
+const { connectRedis } = require("./config/redis");
 const processEmailJobs = require("./modules/email/services/emailWorker");
-const keepServerAlive = require("keep-alive-package");
 const { processPingJobs } = require("./jobs/pingJob");
-// Connect to Database
-ConnectDB();
 
-// Environment variables checker
-checkEnvVariables();
+// Create server
+const server = http.createServer(app);
 
-//Redis Proccess Jobs
-processEmailJobs();
+// Handle unexpected errors
+process.on("uncaughtException", (error) => {
+  console.error(`🔴 UNCAUGHT EXCEPTION: ${error.message}`);
+  console.error(error.stack);
+  process.exit(1);
+});
 
-// Process Ping Jobs
-processPingJobs();
+process.on("unhandledRejection", (error) => {
+  console.error(`🔴 UNHANDLED REJECTION: ${error.message}`);
+  console.error(error.stack);
+  process.exit(1);
+});
 
-keepServerAlive(process.env.BACKEND_SERVER_URL, "10m");
+// Graceful shutdown
+const gracefulShutdown = async () => {
+  console.log("🔄 Graceful shutdown initiated...");
+
+  // Close server first to stop accepting new connections
+  server.close(() => {
+    console.log("✅ HTTP server closed");
+  });
+
+  // Then clean up other resources
+  try {
+    // Give active connections some time to finish
+    setTimeout(async () => {
+      try {
+        await require("./database/mongoDB").disconnectDB();
+        await require("./config/redis").disconnectRedis();
+        console.log("✅ All connections closed properly");
+        process.exit(0);
+      } catch (err) {
+        console.error(`❌ Error during cleanup: ${err.message}`);
+        process.exit(1);
+      }
+    }, 1000);
+  } catch (error) {
+    console.error(`❌ Error during shutdown: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+// Listen for termination signals
+process.on("SIGTERM", gracefulShutdown);
+process.on("SIGINT", gracefulShutdown);
+
+// Start the application
+const startServer = async () => {
+  try {
+    // Connect to MongoDB
+    await connectDB();
+
+    // Connect to Redis (if configured)
+    await connectRedis();
+
+    // Process Email Jobs (if Redis is configured)
+    processEmailJobs();
+
+    // Process Ping Jobs (for website monitoring)
+    processPingJobs();
+
+    // Start server
+    const PORT = process.env.PORT || 3000;
+    server.listen(PORT, () => {
+      console.log(
+        `🚀 Server running on port ${PORT} in ${
+          process.env.NODE_ENV || "development"
+        } mode`
+      );
+    });
+  } catch (error) {
+    console.error(`❌ Failed to start server: ${error.message}`);
+    process.exit(1);
+  }
+};
 
 // Start the server
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-});
+startServer();
