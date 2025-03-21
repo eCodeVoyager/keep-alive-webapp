@@ -61,6 +61,6 @@ router.get(
 );
 
 // Manual ping route - force an immediate ping
-router.post("/:id/ping", authorization, websitesController.pingWebsiteNow);
+router.get("/:id/ping", authorization, websitesController.pingWebsiteNow);
 
 module.exports = router;

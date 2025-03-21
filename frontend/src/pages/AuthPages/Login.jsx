@@ -1,18 +1,18 @@
 import { useContext, useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Mail, Lock, Eye, EyeOff, Share2, LucideLoader } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Share2, Loader } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../../components/Shared/Button";
 import Logo from "../../components/Shared/Logo";
 import { AuthContext } from "../../contexts/AuthContext";
 import { UserContext } from "../../contexts/UserContext";
-import authService from "../../services/authService";
+import AuthService from "../../services/authService";
 import { routes } from "../../router/routes.data";
 import cookies from "js-cookie";
-import Loader from "../../components/Shared/Loader";
+import PageLoader from "../../components/Shared/Loader";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -25,54 +25,75 @@ const KeepAliveLoginForm = () => {
   const { login } = useContext(AuthContext);
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
+  const [loadingProviders, setLoadingProviders] = useState({
+    Google: false,
+    GitHub: false,
+  });
 
   useEffect(() => {
-    const token = cookies.get("authToken");
+    const token = cookies.get("authToken") || cookies.get("token");
     if (token) {
       navigate(routes.dashboard);
     }
     setLoading(false);
   }, [navigate]);
 
-  if (loading) {
-    <Loader />;
-  }
+  const handleProviderLogin = async (provider) => {
+    try {
+      // Store the current page URL to return after OAuth
+      const returnTo = location.state?.from?.pathname || routes.dashboard;
+      localStorage.setItem("oauth_return_to", returnTo);
+
+      // Set loading state for this specific provider
+      setLoadingProviders((prev) => ({ ...prev, [provider]: true }));
+
+      // Redirect to the OAuth provider
+      if (provider === "Google") {
+        AuthService.googleLogin();
+      } else if (provider === "GitHub") {
+        AuthService.githubLogin();
+      }
+    } catch (error) {
+      toast.error(`${provider} login failed. Please try again.`);
+      setLoadingProviders((prev) => ({ ...prev, [provider]: false }));
+    }
+  };
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       setSubmitting(true);
-      const response = await authService.login({
+      const response = await AuthService.login({
         email: values.email,
         password: values.password,
       });
 
       if (response?.data?.accessToken) {
-        cookies.set("authToken", response.data.accessToken, {
-          expires: values.rememberMe ? 7 : undefined, // 7 days if rememberMe is checked
-        });
+        // Store tokens in cookies if not already set by the backend
+        if (!cookies.get("token")) {
+          cookies.set("authToken", response.data.accessToken, {
+            expires: values.rememberMe ? 7 : undefined,
+          });
+        }
 
         login(response.data.accessToken);
 
-        const user = await authService.me();
-        setUser(user);
+        const user = await AuthService.me();
+        setUser(user.data[0]);
 
-        // Redirect to dashboard
-        navigate(routes.dashboard);
+        // Check if redirected from another page
+        const { state } = location;
+        const redirectPath = state?.from?.pathname || routes.dashboard;
+        navigate(redirectPath);
 
         toast.success("Logged in successfully");
       }
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message ===
-          '"password" length must be at least 6 characters long'
-          ? "Invalid email or password"
-          : error?.response?.data?.message || "Error logging in"
-      );
+      toast.error(error?.response?.data?.message || "Error logging in");
     } finally {
       setSubmitting(false);
     }
-   
   };
 
   const handleShare = () => {
@@ -80,7 +101,7 @@ const KeepAliveLoginForm = () => {
       navigator
         .share({
           title: "Keep-Alive Login",
-          text: "Check out Keep-Alive!",
+          text: "Check out Keep-Alive - the solution to keep your websites awake 24/7!",
           url: window.location.href,
         })
         .then(() => {
@@ -92,14 +113,17 @@ const KeepAliveLoginForm = () => {
     }
   };
 
-  const handleProviderLogin = async () => {
-    toast.error("Feature coming soon!", {
-      icon: "🚧",
-    });
-  };
+  if (loading) {
+    return <PageLoader />;
+  }
 
   return (
-    <motion.div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+    <motion.div
+      className="min-h-screen bg-gray-900 flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md relative">
         <motion.button
           whileHover={{ scale: 1.1 }}
@@ -127,6 +151,7 @@ const KeepAliveLoginForm = () => {
         >
           Keep-Alive
         </motion.h2>
+
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -252,10 +277,13 @@ const KeepAliveLoginForm = () => {
               key={provider}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={handleProviderLogin}
-              className="w-full inline-flex justify-center py-2 px-4 border border-gray-700 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"
+              onClick={() => handleProviderLogin(provider)}
+              disabled={loadingProviders[provider]}
+              className="w-full inline-flex justify-center items-center py-2 px-4 border border-gray-700 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {provider === "Google" ? (
+              {loadingProviders[provider] ? (
+                <Loader className="w-5 h-5 animate-spin" />
+              ) : provider === "Google" ? (
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"

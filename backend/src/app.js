@@ -82,46 +82,15 @@ app.use(`${API_PREFIX}/feedbacks`, feedback.feedbackRoutes);
 
 // Swagger documentation if enabled
 if (process.env.ENABLE_SWAGGER_DOCS === "true") {
-  const swaggerJsDoc = require("swagger-jsdoc");
   const swaggerUi = require("swagger-ui-express");
+  const YAML = require("yamljs");
+  const swaggerDocument = YAML.load("./swagger.yaml");
 
-  const swaggerOptions = {
-    definition: {
-      openapi: "3.0.0",
-      info: {
-        title: "Keep Alive API",
-        version: process.env.API_VERSION || "v2",
-        description: "API documentation for the Keep Alive service",
-        contact: {
-          name: "Keep Alive Team",
-        },
-        servers: [
-          {
-            url: process.env.BACKEND_SERVER_URL || "http://localhost:3000",
-            description: "Development Server",
-          },
-        ],
-      },
-      components: {
-        securitySchemes: {
-          bearerAuth: {
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-          },
-          apiKey: {
-            type: "apiKey",
-            in: "header",
-            name: process.env.API_KEY_HEADER || "X-API-KEY",
-          },
-        },
-      },
-    },
-    apis: ["./src/modules/*/routes/**/*.js", "./src/modules/*/models/*.js"],
-  };
-
-  const swaggerDocs = swaggerJsDoc(swaggerOptions);
-  app.use(`${API_PREFIX}/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+  app.use(
+    `${API_PREFIX}/docs`,
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument)
+  );
 
   console.log(`📖 Swagger docs available at ${API_PREFIX}/docs`);
 }

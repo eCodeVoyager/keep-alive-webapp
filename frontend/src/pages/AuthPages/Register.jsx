@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Mail, Lock, Eye, EyeOff, User, Share2 } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Share2, User, Loader } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../../components/Shared/Button";
 import Logo from "../../components/Shared/Logo";
 import VerifyEmailOTP from "../../components/VerifyEmail/VerifyEmailOTP";
 import AuthService from "../../services/authService";
-import cookies from "js-cookie";
 import { routes } from "../../router/routes.data";
-import Loader from "../../components/Shared/Loader";
+import cookies from "js-cookie";
+import PageLoader from "../../components/Shared/Loader";
+import { UserContext } from "../../contexts/UserContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -30,10 +32,17 @@ const KeepAliveRegisterForm = () => {
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
+  const [loadingProviders, setLoadingProviders] = useState({
+    Google: false,
+    GitHub: false,
+  });
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useContext(AuthContext);
+  const { setUser } = useContext(UserContext);
 
   useEffect(() => {
-    const token = cookies.get("authToken");
+    const token = cookies.get("authToken") || cookies.get("token");
     if (token) {
       navigate(routes.dashboard);
     }
@@ -54,7 +63,7 @@ const KeepAliveRegisterForm = () => {
     } catch (error) {
       console.error(error);
       toast.error(
-        error.response.data.message || "Failed to register. Please try again."
+        error.response?.data?.message || "Failed to register. Please try again."
       );
     } finally {
       setSubmitting(false);
@@ -62,7 +71,29 @@ const KeepAliveRegisterForm = () => {
   };
 
   const handleOTPVerified = async () => {
-    navigate("/login");
+    navigate(routes.login);
+    toast.success("Email verified successfully! You can now log in.");
+  };
+
+  const handleProviderLogin = async (provider) => {
+    try {
+      // Store the current page URL to return after OAuth
+      const returnTo = location.state?.from?.pathname || routes.dashboard;
+      localStorage.setItem("oauth_return_to", returnTo);
+
+      // Set loading state for this specific provider
+      setLoadingProviders((prev) => ({ ...prev, [provider]: true }));
+
+      // Redirect to the OAuth provider
+      if (provider === "Google") {
+        AuthService.googleLogin();
+      } else if (provider === "GitHub") {
+        AuthService.githubLogin();
+      }
+    } catch (error) {
+      toast.error(`${provider} login failed. Please try again.`);
+      setLoadingProviders((prev) => ({ ...prev, [provider]: false }));
+    }
   };
 
   const handleShare = () => {
@@ -70,11 +101,11 @@ const KeepAliveRegisterForm = () => {
       navigator
         .share({
           title: "Keep-Alive Registration",
-          text: "Join Keep-Alive!",
+          text: "Join Keep-Alive - the solution to keep your websites awake 24/7!",
           url: window.location.href,
         })
         .then(() => {
-          console.log("Thanks for sharing!");
+          toast.success("Thanks for sharing!");
         })
         .catch(console.error);
     } else {
@@ -82,16 +113,16 @@ const KeepAliveRegisterForm = () => {
     }
   };
 
-  const handleProviderRegister = async () => {
-    toast.error("Feature coming soon!", {
-      icon: "🚧",
-    });
-  };
   if (loading) {
-    <Loader />;
+    return <PageLoader />;
   }
+
   return (
-    <motion.div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+    <motion.div
+      className="min-h-screen bg-gray-900 flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md relative">
         <motion.div
           initial={{ scale: 0 }}
@@ -268,20 +299,41 @@ const KeepAliveRegisterForm = () => {
             </Formik>
 
             <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              className="mt-6"
+            >
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-700"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-gray-800 text-gray-400">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.9 }}
+              transition={{ delay: 1 }}
               className="mt-6 grid grid-cols-2 gap-3"
             >
               {["Google", "GitHub"].map((provider) => (
                 <motion.button
                   key={provider}
                   whileHover={{ scale: 1.05 }}
-                  onClick={handleProviderRegister}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-700 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600"
+                  onClick={() => handleProviderLogin(provider)}
+                  disabled={loadingProviders[provider]}
+                  className="w-full inline-flex justify-center items-center py-2 px-4 border border-gray-700 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {provider === "Google" ? (
+                  {loadingProviders[provider] ? (
+                    <Loader className="w-5 h-5 animate-spin" />
+                  ) : provider === "Google" ? (
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
                       <path
                         fill="currentColor"
@@ -304,7 +356,7 @@ const KeepAliveRegisterForm = () => {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
+              transition={{ delay: 1.1 }}
               className="mt-8 text-center text-sm text-gray-400"
             >
               Already have an account?{" "}

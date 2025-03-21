@@ -7,8 +7,6 @@ import LogsModal from "../Dashboard/LogsModal";
 import { SidebarContext } from "../../contexts/SidebarContext";
 import { WebsiteContext } from "../../contexts/WebsiteContext";
 
-import { ScrollRestoration } from "react-router-dom";
-
 const DashboardLayout = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServer, setSelectedServer] = useState(null);
@@ -49,34 +47,52 @@ const DashboardLayout = ({ children }) => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex">
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Sidebar */}
       <Sidebar
         isOpen={sidebar}
         handleLogout={handleLogout}
         toggleSidebar={toggleSidebar}
         pathname={location.pathname}
       />
-      <div className={`flex-1 transition-all duration-300 ease-in-out`}>
-        <div className="py-10 px-4 sm:px-6 lg:px-10 xl:px-20 2xl:px-60">
-          <div className="flex justify-between items-center mb-10">
-            <button onClick={toggleSidebar} className="lg:hidden text-white">
-              <Menu size={24} />
-            </button>
-          </div>
-          {childrenWithProps}
-          <footer className="text-slate-200 text-center py-4 text-sm fixed bottom-0 left-[50vw]">
-            Made with ❤️ by{" "}
-            <a
-              href="https://github.com/eCodeVoyager"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-green-400"
-            >
-              Ehsan
-            </a>
-          </footer>
+
+      {/* Main Content */}
+      <main
+        className={`
+        transition-all duration-300 ease-in-out
+        ${sidebar ? "md:ml-64" : "md:ml-20"}
+        pt-6 px-4 md:px-8 pb-16
+      `}
+      >
+        {/* Mobile Menu Button */}
+        <div className="flex justify-between items-center mb-6 md:hidden">
+          <button
+            onClick={toggleSidebar}
+            className="p-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700"
+            aria-label="Open menu"
+          >
+            <Menu size={24} />
+          </button>
         </div>
-      </div>
+
+        {/* Page Content */}
+        <div className="max-w-6xl mx-auto">{childrenWithProps}</div>
+
+        {/* Footer */}
+        <footer className="text-center py-4 text-sm text-gray-400 fixed bottom-0 left-0 right-0 bg-gray-900/80 backdrop-blur-sm border-t border-gray-800">
+          Made with ❤️ by{" "}
+          <a
+            href="https://github.com/eCodeVoyager"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-400 hover:text-green-300"
+          >
+            Ehsan
+          </a>
+        </footer>
+      </main>
+
+      {/* Logs Modal */}
       <LogsModal
         isOpen={isModalOpen}
         onClose={closeModal}

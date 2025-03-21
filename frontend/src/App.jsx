@@ -15,13 +15,12 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsAndConditions";
 import ContactPage from "./pages/ContactPage";
 import FAQPage from "./pages/FAQPage";
-
+import OAuthCallback from "./components/Auth/OAuthCallback";
 
 const App = () => {
   return (
     <>
       <Routes>
-        
         <Route path="/">
           <Route path={routes.hero} element={<Hero />} />
           <Route path={routes.login} element={<Login />} />
@@ -35,11 +34,16 @@ const App = () => {
           <Route path={routes.faq} element={<FAQPage />} />
           <Route path={routes.learn_more} element={<LearnMore />} />
           <Route path={routes.privacy_policy} element={<PrivacyPolicy />} />
-
           <Route
             path={routes.tearms_conditions}
             element={<TermsConditions />}
           />
+
+          {/* OAuth callback routes */}
+          <Route path="/auth/google/callback" element={<OAuthCallback />} />
+          <Route path="/auth/github/callback" element={<OAuthCallback />} />
+
+          {/* Protected routes */}
           <Route
             path={routes.dashboard}
             element={

@@ -12,4 +12,8 @@ export const routes = {
   tearms_conditions: "/terms-conditions",
   contact: "/contact",
   faq: "/faq",
+
+  // OAuth routes
+  googleCallback: "/auth/google/callback",
+  githubCallback: "/auth/github/callback",
 };

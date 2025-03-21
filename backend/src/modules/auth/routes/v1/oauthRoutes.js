@@ -3,11 +3,6 @@ const passport = require("passport");
 const router = express.Router();
 const jwt = require("../../../../utils/jwtToken");
 
-/**
- * @route GET /api/v2/auth/google
- * @desc Authenticate with Google
- * @access Public
- */
 router.get(
   "/google",
   passport.authenticate("google", {
@@ -16,11 +11,6 @@ router.get(
   })
 );
 
-/**
- * @route GET /api/v2/auth/google/callback
- * @desc Google OAuth callback
- * @access Public
- */
 router.get(
   "/google/callback",
   passport.authenticate("google", {
@@ -32,11 +22,6 @@ router.get(
   }
 );
 
-/**
- * @route GET /api/v2/auth/github
- * @desc Authenticate with GitHub
- * @access Public
- */
 router.get(
   "/github",
   passport.authenticate("github", {
@@ -45,11 +30,6 @@ router.get(
   })
 );
 
-/**
- * @route GET /api/v2/auth/github/callback
- * @desc GitHub OAuth callback
- * @access Public
- */
 router.get(
   "/github/callback",
   passport.authenticate("github", {
@@ -61,34 +41,37 @@ router.get(
   }
 );
 
-/**
- * Common handler for OAuth success
- * @param {Object} req - Express request
- * @param {Object} res - Express response
- */
 const handleOAuthSuccess = (req, res) => {
-  // Generate tokens
   const accessToken = jwt.generateAccessToken(req.user);
   const refreshToken = jwt.generateRefreshToken(req.user);
 
-  // Store refresh token with the user
   req.user.refreshToken = refreshToken;
   req.user.save();
 
-  // Set cookie with access token
-  const cookieOptions = {
-    httpOnly: process.env.AUTH_COOKIE_HTTP_ONLY === "true",
-    secure: process.env.AUTH_COOKIE_SECURE === "true",
-    sameSite: process.env.AUTH_COOKIE_SAME_SITE || "lax",
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
-  };
-
-  res.cookie("token", accessToken, cookieOptions);
-
-  // Redirect to dashboard with success
+  const frontendUrl = process.env.FRONTEND_URL;
   res.redirect(
-    `${process.env.CLIENT_URL.split(",")[0]}/dashboard?login=success`
+    `${frontendUrl}/auth/github/callback?accessToken=${accessToken}&refreshToken=${refreshToken}}`
   );
 };
+
+// Add this to your oauthRoutes.js file
+router.get("/logout", (req, res) => {
+  // Clear the HTTP-only cookie
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.AUTH_COOKIE_SECURE === "true",
+    sameSite: process.env.AUTH_COOKIE_SAME_SITE || "lax",
+  });
+
+  // Clear any other auth-related cookies
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.AUTH_COOKIE_SECURE === "true",
+    sameSite: process.env.AUTH_COOKIE_SAME_SITE || "lax",
+  });
+
+  // Send success response
+  res.json({ success: true, message: "Logged out successfully" });
+});
 
 module.exports = router;
