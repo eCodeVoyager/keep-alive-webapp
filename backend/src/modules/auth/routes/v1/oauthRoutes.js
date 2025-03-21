@@ -54,24 +54,6 @@ const handleOAuthSuccess = (req, res) => {
   );
 };
 
-// Add this to your oauthRoutes.js file
-router.get("/logout", (req, res) => {
-  // Clear the HTTP-only cookie
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.AUTH_COOKIE_SECURE === "true",
-    sameSite: process.env.AUTH_COOKIE_SAME_SITE || "lax",
-  });
 
-  // Clear any other auth-related cookies
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: process.env.AUTH_COOKIE_SECURE === "true",
-    sameSite: process.env.AUTH_COOKIE_SAME_SITE || "lax",
-  });
-
-  // Send success response
-  res.json({ success: true, message: "Logged out successfully" });
-});
 
 module.exports = router;

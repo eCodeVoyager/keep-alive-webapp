@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import AuthService from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../router/routes.data";
@@ -33,16 +33,40 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Logout function - clears auth state and redirects to login
-  const logout = (redirectTo = routes.login) => {
-    AuthService.logout();
-    setAuthToken(null);
-    setIsAuthenticated(false);
+  // Using useCallback to ensure the function reference remains stable
+  const logout = useCallback(
+    async (redirectTo = routes.login) => {
+      try {
+        // First clear all auth cookies and local state
+        Cookies.remove("authToken");
+        Cookies.remove("refreshToken");
+        Cookies.remove("token");
 
-    // Navigate to login page (or specified redirect)
-    if (redirectTo) {
-      navigate(redirectTo);
-    }
-  };
+        // Then clear state
+        setAuthToken(null);
+        setIsAuthenticated(false);
+
+        // Clear any other auth-related data in localStorage
+        localStorage.removeItem("oauth_return_to");
+
+        // Navigate AFTER everything else is done
+        if (redirectTo) {
+          navigate(redirectTo);
+        }
+      } catch (error) {
+        console.error("Logout error:", error);
+        // Clear state even if API call fails
+        setAuthToken(null);
+        setIsAuthenticated(false);
+
+        // Navigate anyway
+        if (redirectTo) {
+          navigate(redirectTo);
+        }
+      }
+    },
+    [navigate]
+  );
 
   // Check if the current user has a specific role
   const hasRole = async (role) => {
@@ -103,7 +127,7 @@ export const AuthProvider = ({ children }) => {
     return () => {
       window.removeEventListener("auth:logout", handleLogout);
     };
-  }, []);
+  }, [logout]);
 
   // Context value
   const contextValue = {

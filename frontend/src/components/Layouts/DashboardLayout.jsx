@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { Menu } from "lucide-react";
 import Sidebar from "../Sidebar/Sidebar";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -6,12 +6,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import LogsModal from "../Dashboard/LogsModal";
 import { SidebarContext } from "../../contexts/SidebarContext";
 import { WebsiteContext } from "../../contexts/WebsiteContext";
+import { toast } from "react-hot-toast";
 
 const DashboardLayout = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServer, setSelectedServer] = useState(null);
   const [serverLogs, setServerLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { logout } = useContext(AuthContext);
   const { sidebar, toggleSidebar } = useContext(SidebarContext);
@@ -19,12 +21,29 @@ const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogout = () => {
-    logout();
-    setWebsites([]);
-    setIsApiCalled(false);
-    navigate("/login");
-  };
+  // Improved logout handler using useCallback and handling logout state
+  const handleLogout = useCallback(async () => {
+    if (isLoggingOut) return; // Prevent multiple logout attempts
+
+    setIsLoggingOut(true);
+    try {
+      // Reset website data
+      setWebsites([]);
+      setIsApiCalled(false);
+
+      // Show logout toast
+      toast.success("Logged out successfully");
+
+      // Call the logout function from AuthContext
+      await logout();
+
+      // Note: navigation happens in the logout method in AuthContext
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Error logging out. Please try again.");
+      setIsLoggingOut(false);
+    }
+  }, [logout, setWebsites, setIsApiCalled, isLoggingOut]);
 
   const openModal = (server, logs) => {
     setSelectedServer(server);
@@ -47,7 +66,7 @@ const DashboardLayout = ({ children }) => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="bg-gray-900 text-white min-h-screen">
       {/* Sidebar */}
       <Sidebar
         isOpen={sidebar}
@@ -68,7 +87,7 @@ const DashboardLayout = ({ children }) => {
         <div className="flex justify-between items-center mb-6 md:hidden">
           <button
             onClick={toggleSidebar}
-            className="p-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700"
+            className="bg-gray-800 p-2 rounded-lg text-white hover:bg-gray-700"
             aria-label="Open menu"
           >
             <Menu size={24} />
@@ -79,7 +98,7 @@ const DashboardLayout = ({ children }) => {
         <div className="max-w-6xl mx-auto">{childrenWithProps}</div>
 
         {/* Footer */}
-        <footer className="text-center py-4 text-sm text-gray-400 fixed bottom-0 left-0 right-0 bg-gray-900/80 backdrop-blur-sm border-t border-gray-800">
+        <footer className="bg-gray-900/80 border-gray-800 border-t text-center text-gray-400 text-sm backdrop-blur-sm bottom-0 fixed left-0 py-4 right-0">
           Made with ❤️ by{" "}
           <a
             href="https://github.com/eCodeVoyager"

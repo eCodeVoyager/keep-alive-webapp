@@ -79,20 +79,19 @@ const AuthService = {
 
   // Logout - clear all auth tokens
   logout: async () => {
-    try {
-      // Call logout endpoint to clear server-side tokens/cookies
-      await requests.get("/auth/logout", { withCredentials: true });
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-
-    // Also clear client-side cookies
+    // First clear the client-side cookies to prevent issues with subsequent requests
     Cookies.remove("authToken");
     Cookies.remove("refreshToken");
     Cookies.remove("token");
 
-    // Clear any other auth-related data in localStorage
-    localStorage.removeItem("oauth_return_to");
+    try {
+      // Then call logout endpoint to clear server-side tokens/sessions
+      return await requests.get("/auth/logout", { withCredentials: true });
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Even if the server-side logout fails, we've already cleared client-side tokens
+      return { success: false, error };
+    }
   },
 
   // Check if user is authenticated

@@ -6,9 +6,7 @@ import AuthService from "../../services/authService";
 import { AuthContext } from "../../contexts/AuthContext";
 import { UserContext } from "../../contexts/UserContext";
 import { routes } from "../../router/routes.data";
-import { toast } from "react-hot-toast";
-import Logo from "../../components/Shared/Logo";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 
 const OAuthCallback = () => {
   const [status, setStatus] = useState("loading"); // loading, success, error
@@ -23,20 +21,29 @@ const OAuthCallback = () => {
       try {
         // Extract tokens from URL query parameters
         const searchParams = new URLSearchParams(location.search);
-        const accessToken = searchParams.get("accessToken");
+        const accessToken =
+          searchParams.get("token") || searchParams.get("accessToken");
         const refreshToken = searchParams.get("refreshToken");
+        const error = searchParams.get("error");
+
+        // Check for error parameter
+        if (error) {
+          throw new Error(decodeURIComponent(error));
+        }
 
         // Determine provider from pathname
         const pathname = location.pathname;
         const provider = pathname.includes("github") ? "github" : "google";
 
-        if (!accessToken || !refreshToken) {
+        if (!accessToken) {
           throw new Error("Authentication tokens not found in the URL");
         }
 
         // Store tokens
-        Cookie.set("authToken", accessToken);
-        Cookie.set("refreshToken", refreshToken);
+        Cookies.set("authToken", accessToken, { expires: 1 }); // 1 day
+        if (refreshToken) {
+          Cookies.set("refreshToken", refreshToken, { expires: 30 }); // 30 days
+        }
 
         // Set authentication state
         login(accessToken);
@@ -48,8 +55,7 @@ const OAuthCallback = () => {
           setUser(userResponse.data[0]);
           setStatus("success");
 
-          // Show success toast
-          toast.success(`Successfully signed in with ${provider}`);
+          // Authentication successful, continue to redirect
 
           // Redirect after a short delay to show success message
           setTimeout(() => {
@@ -67,8 +73,7 @@ const OAuthCallback = () => {
         setErrorMessage(error.message || "Authentication failed");
         setStatus("error");
 
-        // Show error toast
-        toast.error("Authentication failed. Please try again.");
+        // Authentication failed, will redirect to login
 
         // Redirect to login after a delay
         setTimeout(() => {
@@ -81,24 +86,20 @@ const OAuthCallback = () => {
   }, [location, login, navigate, setUser]);
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+    <div className="flex bg-gray-900 justify-center p-4 items-center min-h-screen">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md text-center"
+        className="bg-gray-800 p-8 rounded-2xl shadow-2xl text-center w-full max-w-md"
       >
-        <div className="flex items-center justify-center mb-6">
-          <Logo />
-        </div>
-
         {status === "loading" && (
           <>
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl text-white font-bold mb-4">
               Authenticating...
             </h2>
             <div className="flex justify-center">
-              <Loader className="h-12 w-12 text-green-500 animate-spin" />
+              <Loader className="h-12 text-green-500 w-12 animate-spin" />
             </div>
             <p className="text-gray-400 mt-4">
               Please wait while we complete your authentication
@@ -114,9 +115,9 @@ const OAuthCallback = () => {
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className="flex justify-center mb-4"
             >
-              <CheckCircle className="h-16 w-16 text-green-500" />
+              <CheckCircle className="h-16 text-green-500 w-16" />
             </motion.div>
-            <h2 className="text-2xl font-bold text-white mb-2">
+            <h2 className="text-2xl text-white font-bold mb-2">
               Authentication Successful!
             </h2>
             <p className="text-gray-400 mb-4">
@@ -134,13 +135,13 @@ const OAuthCallback = () => {
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className="flex justify-center mb-4"
             >
-              <XCircle className="h-16 w-16 text-red-500" />
+              <XCircle className="h-16 text-red-500 w-16" />
             </motion.div>
-            <h2 className="text-2xl font-bold text-white mb-2">
+            <h2 className="text-2xl text-white font-bold mb-2">
               Authentication Failed
             </h2>
-            <div className="flex items-start justify-center mt-4 mb-6">
-              <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
+            <div className="flex justify-center items-start mb-6 mt-4">
+              <AlertTriangle className="flex-shrink-0 h-5 text-yellow-500 w-5 mr-2 mt-0.5" />
               <p className="text-gray-400 text-left">{errorMessage}</p>
             </div>
             <p className="text-gray-400">Redirecting to login page...</p>
