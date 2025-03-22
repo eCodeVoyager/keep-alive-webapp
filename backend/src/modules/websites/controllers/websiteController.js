@@ -434,13 +434,16 @@ const getWebsiteStats = async (req, res, next) => {
     const website = await websiteService.getWebsite(id);
 
     if (!website) {
-      return next(ApiError.notFound("Website not found"));
+      return next(new ApiError(httpStatus.NOT_FOUND, "Website not found"));
     }
 
     // Verify ownership or admin role
     if (website.owner.toString() !== req.user.id && req.user.role !== "admin") {
       return next(
-        ApiError.forbidden("You do not have permission to access this website")
+        new ApiError(
+          httpStatus.FORBIDDEN,
+          "You do not have permission to access this website"
+        )
       );
     }
 
@@ -472,7 +475,8 @@ const getWebsiteStats = async (req, res, next) => {
     // Get logs within the specified period
     const logs = await logService.getLogsWithinPeriod(
       website.url,
-      timeThreshold
+      timeThreshold,
+      { sort: { pingAt: -1 } }
     );
 
     // Calculate statistics
@@ -487,6 +491,12 @@ const getWebsiteStats = async (req, res, next) => {
       responseTimeTrend: calculateResponseTimeTrend(logs),
       lastChecked: logs.length > 0 ? logs[0].pingAt : null,
       period,
+      checksPerHour: calculateChecksPerHour(logs, timeRange),
+      availabilityPercentage: calculateAvailabilityPercentage(
+        logs,
+        timeRange,
+        website.ping_time
+      ),
     };
 
     return res
@@ -503,6 +513,63 @@ const getWebsiteStats = async (req, res, next) => {
   }
 };
 
+/**
+ * Calculate checks per hour
+ * @param {Array} logs - Array of log entries
+ * @param {number} timeRange - Time range in milliseconds
+ * @returns {number} - Average checks per hour
+ */
+const calculateChecksPerHour = (logs, timeRange) => {
+  if (!logs || logs.length === 0) return 0;
+
+  const hours = timeRange / (60 * 60 * 1000);
+  return +(logs.length / hours).toFixed(2);
+};
+
+/**
+ * Calculate availability percentage considering expected checks
+ * @param {Array} logs - Array of log entries
+ * @param {number} timeRange - Time range in milliseconds
+ * @param {string} pingInterval - Ping interval (e.g., "5m", "1h")
+ * @returns {number} - Availability percentage
+ */
+const calculateAvailabilityPercentage = (logs, timeRange, pingInterval) => {
+  if (!logs || logs.length === 0) return 0;
+
+  // Parse ping interval to milliseconds
+  let intervalMs;
+  const intervalValue = parseInt(pingInterval.slice(0, -1));
+  const intervalUnit = pingInterval.slice(-1);
+
+  switch (intervalUnit) {
+    case "s":
+      intervalMs = intervalValue * 1000;
+      break;
+    case "m":
+      intervalMs = intervalValue * 60 * 1000;
+      break;
+    case "h":
+      intervalMs = intervalValue * 60 * 60 * 1000;
+      break;
+    case "d":
+      intervalMs = intervalValue * 24 * 60 * 60 * 1000;
+      break;
+    default:
+      intervalMs = 5 * 60 * 1000; // Default to 5 minutes
+  }
+
+  // Calculate expected number of checks
+  const expectedChecks = Math.floor(timeRange / intervalMs);
+
+  // Count successful checks
+  const successfulChecks = logs.filter((log) => {
+    const status = parseInt(log.status, 10);
+    return status >= 200 && status < 400;
+  }).length;
+
+  // Calculate availability percentage
+  return Math.round((successfulChecks / expectedChecks) * 100);
+};
 /**
  * Immediately ping a website
  * @param {Object} req - Express request object
@@ -608,18 +675,22 @@ const getWebsiteHistory = async (req, res, next) => {
   try {
     const { id } = req.params;
     const days = parseInt(req.query.days) || 7; // Default to 7 days
+    const interval = req.query.interval || "hour"; // Default to hourly intervals
 
     // Get the website
     const website = await websiteService.getWebsite(id);
 
     if (!website) {
-      return next(ApiError.notFound("Website not found"));
+      return next(new ApiError(httpStatus.NOT_FOUND, "Website not found"));
     }
 
     // Verify ownership or admin role
     if (website.owner.toString() !== req.user.id && req.user.role !== "admin") {
       return next(
-        ApiError.forbidden("You do not have permission to access this website")
+        new ApiError(
+          httpStatus.FORBIDDEN,
+          "You do not have permission to access this website"
+        )
       );
     }
 
@@ -630,30 +701,30 @@ const getWebsiteHistory = async (req, res, next) => {
     // Get all logs within the specified period
     const logs = await logService.getLogsWithinPeriod(
       website.url,
-      timeThreshold
+      timeThreshold,
+      { sort: { pingAt: 1 } } // Sort by oldest first for chronological order
     );
 
-    // Group logs by day
-    const groupedLogs = groupLogsByTimeInterval(
-      logs,
-      req.query.interval || "hour"
-    );
+    // Group logs by time interval
+    const groupedLogs = groupLogsByTimeInterval(logs, interval);
 
     // Format data for charts
+    const labels = Object.keys(groupedLogs);
     const chartData = {
-      labels: Object.keys(groupedLogs),
+      labels: labels,
       datasets: {
-        responseTime: Object.values(groupedLogs).map(
-          (data) => data.avgResponseTime
-        ),
-        uptime: Object.values(groupedLogs).map((data) => data.uptime),
-        status: Object.values(groupedLogs).map((data) => data.onlinePercentage),
+        responseTime: labels.map((key) => groupedLogs[key].avgResponseTime),
+        uptime: labels.map((key) => groupedLogs[key].uptime),
+        status: labels.map((key) => groupedLogs[key].onlinePercentage),
       },
+      rawData: groupedLogs,
       summary: {
         totalChecks: logs.length,
         avgResponseTime: calculateAverageResponseTime(logs),
         uptime: calculateUptimePercentage(logs),
         downtime: 100 - calculateUptimePercentage(logs),
+        maxResponseTime: calculateMaxResponseTime(logs),
+        minResponseTime: calculateMinResponseTime(logs),
       },
     };
 
@@ -834,7 +905,9 @@ const groupLogsByTimeInterval = (logs, interval) => {
     const group = grouped[key];
     group.avgResponseTime = calculateAverageResponseTime(group.logs);
     group.uptime = calculateUptimePercentage(group.logs);
-    group.onlinePercentage = (group.onlineCount / group.totalCount) * 100;
+    group.onlinePercentage = Math.round(
+      (group.onlineCount / group.totalCount) * 100
+    );
   });
 
   return grouped;

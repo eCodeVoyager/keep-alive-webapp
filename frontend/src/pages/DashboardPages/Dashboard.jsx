@@ -187,11 +187,13 @@ const Dashboard = () => {
     setSelectedServer(server);
     setIsStatsModalOpen(true);
     setIsStatsLoading(true);
+
     try {
-      const { data } = await statsService.getWebsiteStats(server._id);
-      setServerStats(data);
+      const response = await statsService.getWebsiteStats(server._id);
+      console.log("API Stats Response:", response);
+      setServerStats(response);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching statistics:", error);
       toast.error(error.response?.data?.message || "Error fetching statistics");
     } finally {
       setIsStatsLoading(false);
@@ -441,12 +443,10 @@ const Dashboard = () => {
         logs={serverLogs}
         isLoading={isLogLoading}
       />
-
       <StatsModal
         isOpen={isStatsModalOpen}
         onClose={closeStatsModal}
         server={selectedServer}
-        stats={serverStats}
         isLoading={isStatsLoading}
       />
     </DashboardLayout>
