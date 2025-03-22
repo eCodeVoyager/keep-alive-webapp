@@ -90,6 +90,11 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    accountType: {
+      type: String,
+      enum: ["free", "premium"],
+      default: "free",
+    },
     apiKeys: [
       {
         key: {

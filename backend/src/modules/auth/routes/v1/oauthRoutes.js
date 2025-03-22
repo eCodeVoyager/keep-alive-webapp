@@ -50,10 +50,10 @@ const handleOAuthSuccess = (req, res) => {
 
   const frontendUrl = process.env.FRONTEND_URL;
   res.redirect(
-    `${frontendUrl}/auth/github/callback?accessToken=${accessToken}&refreshToken=${refreshToken}}`
+    `${frontendUrl}/auth/${
+      req.user.oauth ? "github" : "google"
+    }/callback?token=${accessToken}&refreshToken=${refreshToken}`
   );
 };
-
-
 
 module.exports = router;

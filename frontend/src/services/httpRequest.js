@@ -35,7 +35,7 @@ const processQueue = (error, token = null) => {
 // Request interceptor - adds auth token to requests
 instance.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("authToken") ;
+    const token = Cookies.get("authToken");
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
