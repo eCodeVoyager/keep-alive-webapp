@@ -21,7 +21,13 @@ const userModel = require("../models/userModel");
 
 const createUser = async (userBody) => {
   try {
-    return (user = await userModel.create(userBody));
+    // Set default role and accountType if not provided
+    const userData = {
+      ...userBody,
+      role: userBody.role || "user",
+      accountType: userBody.accountType || "free",
+    };
+    return (user = await userModel.create(userData));
   } catch (error) {
     throw error;
   }

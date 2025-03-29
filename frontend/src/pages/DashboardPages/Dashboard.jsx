@@ -21,6 +21,7 @@ import DashboardLayout from "../../components/Layouts/DashboardLayout";
 import { WebsiteContext } from "../../contexts/WebsiteContext";
 import ServerCardSkeleton from "../../components/SkeletonLoaders/ServerCardSkeleton";
 import { UserContext } from "../../contexts/UserContext";
+import SEO from "../../components/Shared/SEO";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -241,6 +242,11 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
+      <SEO
+        title="Dashboard"
+        description="Monitor your websites' uptime status, view detailed statistics, and manage your monitoring settings in real-time."
+        keywords="website monitoring dashboard, uptime status, website statistics, server monitoring, real-time monitoring"
+      />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -250,7 +256,7 @@ const Dashboard = () => {
         {/* Header and View Toggle */}
         <div className="flex flex-col justify-between gap-4 items-start md:flex-row md:items-center">
           <div>
-            <h2 className="text-2xl text-white font-bold mb-2 md:text-3xl">
+            <h2 className="text-2xl text-white font-bold mb-3 md:text-3xl">
               Dashboard
             </h2>
             <p className="text-gray-400">

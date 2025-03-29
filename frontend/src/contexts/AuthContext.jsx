@@ -68,16 +68,16 @@ export const AuthProvider = ({ children }) => {
     [navigate]
   );
 
-  // Check if the current user has a specific role
-  const hasRole = async (role) => {
+  // Check if the current user has a specific account type
+  const hasAccountType = async (accountType) => {
     try {
       const response = await AuthService.me();
       if (response?.data && response.data.length > 0) {
-        return response.data[0].role === role;
+        return response.data[0].accountType === accountType;
       }
       return false;
     } catch (error) {
-      console.error("Error checking role:", error);
+      console.error("Error checking account type:", error);
       return false;
     }
   };
@@ -136,7 +136,7 @@ export const AuthProvider = ({ children }) => {
     authLoading,
     login,
     logout,
-    hasRole,
+    hasAccountType,
     refreshToken,
   };
 

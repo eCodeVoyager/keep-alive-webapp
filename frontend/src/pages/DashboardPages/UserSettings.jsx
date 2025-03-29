@@ -39,6 +39,7 @@ import ServerService from "../../services/serverService";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../router/routes.data";
 import StatusBadge from "../../components/Dashboard/StatusBadge";
+import SEO from "../../components/Shared/SEO";
 
 // Add API endpoints available based on the API documentation
 const API_FEATURES = {
@@ -449,6 +450,11 @@ const UserSettings = () => {
 
   return (
     <DashboardLayout>
+      <SEO
+        title="Account Settings"
+        description="Manage your KeepAlive account settings, including profile information, security settings, and notification preferences."
+        keywords="account settings, profile management, security settings, notification preferences, KeepAlive dashboard"
+      />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -456,9 +462,15 @@ const UserSettings = () => {
         className="max-w-6xl mx-auto space-y-6"
       >
         <div className="flex flex-col justify-between items-start mb-6 md:flex-row md:items-center">
-          <h2 className="text-2xl text-white font-bold md:text-3xl">
-            User Settings
-          </h2>
+          <div>
+            <h2 className="text-2xl text-white font-bold md:text-3xl">
+              User Settings
+            </h2>
+            <p className="text-gray-400 mt-3">
+              Manage your account preferences, security settings, and
+              notification preferences
+            </p>
+          </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -476,7 +488,7 @@ const UserSettings = () => {
             {tabItems.map(
               (item) =>
                 // Hide premium tabs for non-premium users
-                (!item.premium || user?.role === "premium") && (
+                (!item.premium || user?.accountType === "premium") && (
                   <button
                     key={item.id}
                     className={`inline-flex items-center px-4 py-3 mr-4 text-sm font-medium border-b-2 rounded-t-lg ${
@@ -625,9 +637,9 @@ const UserSettings = () => {
                     </div>
                     <div className="flex items-center">
                       <span className="text-white capitalize mr-2">
-                        {user?.role || "free"}
+                        {user?.accountType || "free"}
                       </span>
-                      {user?.role === "premium" ? (
+                      {user?.accountType === "premium" ? (
                         <span className="bg-gradient-to-r rounded-full text-black text-xs font-semibold from-yellow-300 px-2 py-0.5 to-yellow-500">
                           PREMIUM
                         </span>
@@ -678,7 +690,7 @@ const UserSettings = () => {
                     </div>
                   </div>
 
-                  {user?.role === "free" && (
+                  {user?.accountType === "free" && (
                     <div className="bg-gray-700 p-4 rounded-xl md:col-span-2">
                       <div className="flex items-center mb-3">
                         <Shield className="h-5 text-gray-400 w-5 mr-2" />
@@ -1009,9 +1021,9 @@ const UserSettings = () => {
                           )
                         }
                       />
-                        <div className="bg-gray-700 h-6 rounded-full w-11 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-500 peer-checked:bg-green-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
-                      </label>
-                    </div>
+                      <div className="bg-gray-700 h-6 rounded-full w-11 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-500 peer-checked:bg-green-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
+                    </label>
+                  </div>
 
                   {/* Push Notifications */}
                   <div className="flex border-b border-gray-700 justify-between items-center py-2">
@@ -1051,7 +1063,7 @@ const UserSettings = () => {
                           <h4 className="text-white font-medium">
                             SMS Notifications
                           </h4>
-                          {user?.role !== "premium" && (
+                          {user?.accountType !== "premium" && (
                             <span className="bg-gradient-to-r rounded-full text-white text-xs font-semibold from-green-500 ml-2 px-2 py-0.5 to-blue-500">
                               PREMIUM
                             </span>
@@ -1066,7 +1078,7 @@ const UserSettings = () => {
                       <input
                         type="checkbox"
                         className="peer sr-only"
-                        disabled={user?.role !== "premium"}
+                        disabled={user?.accountType !== "premium"}
                         checked={notificationChannels.sms}
                         onChange={(e) =>
                           handleNotificationChannelToggle(
@@ -1077,7 +1089,7 @@ const UserSettings = () => {
                       />
                       <div
                         className={`w-11 h-6 ${
-                          user?.role !== "premium"
+                          user?.accountType !== "premium"
                             ? "bg-gray-800 cursor-not-allowed"
                             : "bg-gray-700"
                         } peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600`}
@@ -1211,7 +1223,7 @@ const UserSettings = () => {
           )}
 
           {/* API Tab (Premium users only) */}
-          {activeTab === "api" && user?.role === "premium" && (
+          {activeTab === "api" && user?.accountType === "premium" && (
             <>
               <motion.div
                 initial={{ y: 20, opacity: 0 }}

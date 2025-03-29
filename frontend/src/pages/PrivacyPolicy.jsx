@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LockIcon, Shield, Eye } from "lucide-react";
+import SEO from "../components/Shared/SEO";
 
 const PrivacyPolicy = () => {
   const sections = [
@@ -55,80 +56,90 @@ const PrivacyPolicy = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="container mx-auto px-4 py-20"
-      >
-        <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0.5 }}
-            animate={{ scale: 1 }}
-            className="inline-block mb-6"
-          >
-            <LockIcon className="w-16 h-16 text-green-400" />
-          </motion.div>
-          <h1 className="text-4xl font-bold text-white mb-4">Privacy Policy</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            We take your privacy seriously. This policy explains how we collect,
-            use, and protect your information. Last updated: October 24, 2024
-          </p>
-        </div>
-
+    <>
+      <SEO
+        title="Privacy Policy"
+        description="Learn how Server collects, uses, and protects your information. Our commitment to your privacy and data security."
+        keywords="privacy policy, data protection, Server privacy, website monitoring privacy, data security"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="max-w-4xl mx-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="container mx-auto px-4 py-20"
         >
-          {sections.map((section, index) => (
+          <div className="text-center mb-12">
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * index }}
-              className="bg-gray-800 rounded-xl p-6 mb-6 shadow-lg"
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              className="inline-block mb-6"
             >
-              <div className="flex items-start">
-                <section.icon className="w-6 h-6 text-green-400 mr-4 mt-1 flex-shrink-0" />
-                <div>
-                  <h2 className="text-xl font-semibold text-white mb-3">
-                    {section.title}
-                  </h2>
-                  <p className="text-gray-300 leading-relaxed">
-                    {section.content}
-                  </p>
-                </div>
-              </div>
+              <LockIcon className="w-16 h-16 text-green-400" />
             </motion.div>
-          ))}
-
-          <div className="mt-12 text-center">
-            <p className="text-gray-400 mb-6">
-              For questions about our privacy practices or to exercise your
-              rights, please contact our Data Protection Officer.
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Privacy Policy
+            </h1>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              We take your privacy seriously. This policy explains how we
+              collect, use, and protect your information. Last updated: October
+              24, 2024
             </p>
-            <div className="flex justify-center space-x-4">
-              <Link
-                to="/contact"
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center"
-              >
-                Contact DPO
-                <Shield className="w-5 h-5 ml-2" />
-              </Link>
-              <Link
-                to="/settings"
-                className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center"
-              >
-                Privacy Settings
-                <LockIcon className="w-5 h-5 ml-2" />
-              </Link>
-            </div>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="max-w-4xl mx-auto"
+          >
+            {sections.map((section, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index }}
+                className="bg-gray-800 rounded-xl p-6 mb-6 shadow-lg"
+              >
+                <div className="flex items-start">
+                  <section.icon className="w-6 h-6 text-green-400 mr-4 mt-1 flex-shrink-0" />
+                  <div>
+                    <h2 className="text-xl font-semibold text-white mb-3">
+                      {section.title}
+                    </h2>
+                    <p className="text-gray-300 leading-relaxed">
+                      {section.content}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+
+            <div className="mt-12 text-center">
+              <p className="text-gray-400 mb-6">
+                For questions about our privacy practices or to exercise your
+                rights, please contact our Data Protection Officer.
+              </p>
+              <div className="flex justify-center space-x-4">
+                <Link
+                  to="/contact"
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center"
+                >
+                  Contact DPO
+                  <Shield className="w-5 h-5 ml-2" />
+                </Link>
+                <Link
+                  to="/settings"
+                  className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center"
+                >
+                  Privacy Settings
+                  <LockIcon className="w-5 h-5 ml-2" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    </>
   );
 };
 

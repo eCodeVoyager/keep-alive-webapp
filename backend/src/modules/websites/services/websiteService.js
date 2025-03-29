@@ -136,6 +136,23 @@ const updateWebsite = async (id, websiteData) => {
 };
 
 /**
+ * Check if user has reached their website limit
+ * @param {string} userId - User ID
+ * @param {string} accountType - User's account type
+ * @returns {Promise<boolean>} Whether user can add more websites
+ */
+const checkWebsiteLimit = async (userId, accountType) => {
+  try {
+    const userWebsites = await websiteModel.countDocuments({ owner: userId });
+    const limit = accountType === "premium" ? 100 : 5; // Free users can monitor 5 websites, premium users 100
+
+    return userWebsites < limit;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
  * Delete a website by ID
  * @param {string} id - Website ID
  * @returns {Promise<Object>} - Deleted website
@@ -147,14 +164,34 @@ const deleteWebsite = async (id) => {
       throw new ApiError(httpStatus.BAD_REQUEST, "Invalid website ID");
     }
 
-    const website = await websiteModel.findByIdAndDelete(id);
+    // First try to get the website to ensure it exists
+    const website = await websiteModel.findById(id);
     if (!website) {
-      throw new ApiError(httpStatus.NOT_FOUND, "Website not found");
+      // If website doesn't exist, consider it already deleted
+      return { message: "Website already deleted" };
     }
 
-    return website;
+    // Try to delete the website
+    const deletedWebsite = await websiteModel.findByIdAndDelete(id);
+    if (!deletedWebsite) {
+      // If deletion failed but website exists, throw error
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Failed to delete website"
+      );
+    }
+
+    return deletedWebsite;
   } catch (error) {
-    throw error;
+    // If error is already an ApiError, rethrow it
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    // For other errors, throw a generic error
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Error deleting website"
+    );
   }
 };
 
@@ -323,4 +360,5 @@ module.exports = {
   incrementOfflinePingCount,
   getOfflineWebsitesForCleanup,
   searchWebsites,
+  checkWebsiteLimit,
 };

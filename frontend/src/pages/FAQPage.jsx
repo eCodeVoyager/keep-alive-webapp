@@ -13,6 +13,7 @@ import {
   Coffee,
   AlertCircle,
 } from "lucide-react";
+import SEO from "../components/Shared/SEO";
 
 const FAQPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -111,164 +112,174 @@ const FAQPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="container mx-auto px-4 py-20"
-      >
-        {/* Header */}
-        <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0.5 }}
-            animate={{ scale: 1 }}
-            className="inline-block mb-6"
-          >
-            <HelpCircle className="w-16 h-16 text-green-400" />
-          </motion.div>
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Frequently Asked Questions
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Find answers to common questions about Keep-Alive. Can't find what
-            you're looking for?{" "}
-            <a href="/contact" className="text-green-400 hover:text-green-300">
-              Contact our support team
-            </a>
-            .
-          </p>
-        </div>
-
-        {/* Search Bar */}
+    <>
+      <SEO
+        title="Frequently Asked Questions"
+        description="Find answers to common questions about Server's website monitoring service, features, pricing, and technical details."
+        keywords="FAQ, frequently asked questions, Server help, website monitoring FAQ, uptime monitoring questions"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="max-w-2xl mx-auto mb-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="container mx-auto px-4 py-20"
         >
-          <div className="relative">
-            <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search FAQ..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-green-400 focus:outline-none"
-            />
-          </div>
-        </motion.div>
-
-        {/* Category Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
-        >
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
-                activeCategory === category.id
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-              }`}
+          {/* Header */}
+          <div className="text-center mb-12">
+            <motion.div
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              className="inline-block mb-6"
             >
-              <category.icon className="w-5 h-5 mr-2" />
-              {category.name}
-            </button>
-          ))}
-        </motion.div>
-
-        {/* FAQ Items */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="max-w-3xl mx-auto"
-        >
-          {filteredFaqs.length === 0 ? (
-            <div className="text-center py-12">
-              <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-300 text-lg">
-                No questions found. Try adjusting your search.
-              </p>
-            </div>
-          ) : (
-            filteredFaqs.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index }}
-                className="mb-4"
+              <HelpCircle className="w-16 h-16 text-green-400" />
+            </motion.div>
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Frequently Asked Questions
+            </h1>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Find answers to common questions about Keep-Alive. Can't find what
+              you're looking for?{" "}
+              <a
+                href="/contact"
+                className="text-green-400 hover:text-green-300"
               >
-                <button
-                  onClick={() => toggleItem(index)}
-                  className="w-full bg-gray-800 rounded-lg p-6 text-left hover:bg-gray-750 transition-colors"
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-semibold text-white pr-8">
-                      {item.question}
-                    </h3>
-                    {expandedItems.has(index) ? (
-                      <Minus className="w-6 h-6 text-green-400 flex-shrink-0" />
-                    ) : (
-                      <Plus className="w-6 h-6 text-green-400 flex-shrink-0" />
-                    )}
-                  </div>
-                  {expandedItems.has(index) && (
-                    <motion.p
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      className="mt-4 text-gray-300 leading-relaxed"
-                    >
-                      {item.answer}
-                    </motion.p>
-                  )}
-                </button>
-              </motion.div>
-            ))
-          )}
-        </motion.div>
+                Contact our support team
+              </a>
+              .
+            </p>
+          </div>
 
-        {/* Still Need Help Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="text-center mt-16"
-        >
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Still Need Help?
-          </h2>
-          <p className="text-gray-300 mb-8">
-            Our support team is available 24/7 to answer any questions you may
-            have.
-          </p>
-          <a
-            href="/contact"
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center"
+          {/* Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="max-w-2xl mx-auto mb-12"
           >
-            Contact Support
-            <svg
-              className="w-5 h-5 ml-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
+            <div className="relative">
+              <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search FAQ..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-green-400 focus:outline-none"
               />
-            </svg>
-          </a>
+            </div>
+          </motion.div>
+
+          {/* Category Filters */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-wrap justify-center gap-4 mb-12"
+          >
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
+                  activeCategory === category.id
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                }`}
+              >
+                <category.icon className="w-5 h-5 mr-2" />
+                {category.name}
+              </button>
+            ))}
+          </motion.div>
+
+          {/* FAQ Items */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="max-w-3xl mx-auto"
+          >
+            {filteredFaqs.length === 0 ? (
+              <div className="text-center py-12">
+                <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-300 text-lg">
+                  No questions found. Try adjusting your search.
+                </p>
+              </div>
+            ) : (
+              filteredFaqs.map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * index }}
+                  className="mb-4"
+                >
+                  <button
+                    onClick={() => toggleItem(index)}
+                    className="w-full bg-gray-800 rounded-lg p-6 text-left hover:bg-gray-750 transition-colors"
+                  >
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-xl font-semibold text-white pr-8">
+                        {item.question}
+                      </h3>
+                      {expandedItems.has(index) ? (
+                        <Minus className="w-6 h-6 text-green-400 flex-shrink-0" />
+                      ) : (
+                        <Plus className="w-6 h-6 text-green-400 flex-shrink-0" />
+                      )}
+                    </div>
+                    {expandedItems.has(index) && (
+                      <motion.p
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="mt-4 text-gray-300 leading-relaxed"
+                      >
+                        {item.answer}
+                      </motion.p>
+                    )}
+                  </button>
+                </motion.div>
+              ))
+            )}
+          </motion.div>
+
+          {/* Still Need Help Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="text-center mt-16"
+          >
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Still Need Help?
+            </h2>
+            <p className="text-gray-300 mb-8">
+              Our support team is available 24/7 to answer any questions you may
+              have.
+            </p>
+            <a
+              href="/contact"
+              className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center"
+            >
+              Contact Support
+              <svg
+                className="w-5 h-5 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </a>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    </>
   );
 };
 

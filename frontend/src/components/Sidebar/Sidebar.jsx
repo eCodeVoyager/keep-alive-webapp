@@ -60,7 +60,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout, pathname }) => {
         className={`
           fixed top-0 left-0 z-40 h-screen
           bg-gray-800 shadow-xl
-          flex flex-col py-6
+          flex flex-col py-6 rounded-tr-2xl rounded-br-2xl
           transition-all duration-300 ease-in-out
           ${isOpen ? "w-full md:w-64" : "w-20"}
           ${isOpen ? "translate-x-0" : "md:translate-x-0 -translate-x-full"}

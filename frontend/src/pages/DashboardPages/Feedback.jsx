@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../../components/Shared/Button";
 import DashboardLayout from "../../components/Layouts/DashboardLayout";
 import FeedbackService from "../../services/feedbackService";
+import SEO from "../../components/Shared/SEO";
 
 const feedbackValidationSchema = Yup.object().shape({
   rating: Yup.number().required("Please select a rating"),
@@ -61,6 +62,11 @@ const Feedback = () => {
 
   return (
     <DashboardLayout>
+      <SEO
+        title="Feedback"
+        description="Share your thoughts, report issues, or suggest improvements to help make KeepAlive better for everyone."
+        keywords="feedback, bug report, feature request, KeepAlive feedback, user suggestions"
+      />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

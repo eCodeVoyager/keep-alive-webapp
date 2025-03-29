@@ -15,9 +15,9 @@ import Loader from "../Shared/Loader";
  * - Ensures user profile is loaded
  * - Redirects to login if not authenticated
  * - Redirects to email verification if email not verified
- * - Supports role-based access control
+ * - Supports account type-based access control
  */
-const ProtectedRoute = ({ children, requiredRole }) => {
+const ProtectedRoute = ({ children, requiredAccountType }) => {
   const { user, setUser } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
   const location = useLocation();
@@ -50,8 +50,11 @@ const ProtectedRoute = ({ children, requiredRole }) => {
                 return;
               }
 
-              // Check role if required
-              if (requiredRole && userData.data[0]?.role !== requiredRole) {
+              // Check account type if required
+              if (
+                requiredAccountType &&
+                userData.data[0]?.accountType !== requiredAccountType
+              ) {
                 toast.error("You don't have permission to access this page");
                 setLoading(false);
                 return;
@@ -69,15 +72,15 @@ const ProtectedRoute = ({ children, requiredRole }) => {
             logout();
           }
         } else {
-          // We already have user data, check verification and role
+          // We already have user data, check verification and account type
           if (user.isVerified === false) {
             // User email not verified
             setLoading(false);
             return;
           }
 
-          if (requiredRole && user.role !== requiredRole) {
-            // User doesn't have required role
+          if (requiredAccountType && user.accountType !== requiredAccountType) {
+            // User doesn't have required account type
             setLoading(false);
             return;
           }
@@ -95,7 +98,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     };
 
     checkAuthentication();
-  }, [user, setUser, logout, requiredRole]);
+  }, [user, setUser, logout, requiredAccountType]);
 
   // Listen for auth:logout events (from token refresh failures)
   useEffect(() => {
@@ -125,8 +128,8 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     return <Navigate to={routes.email_verification_required} replace />;
   }
 
-  // If role check fails, show unauthorized page
-  if (requiredRole && user && user.role !== requiredRole) {
+  // If account type check fails, show unauthorized page
+  if (requiredAccountType && user && user.accountType !== requiredAccountType) {
     return <Navigate to="/unauthorized" replace />;
   }
 

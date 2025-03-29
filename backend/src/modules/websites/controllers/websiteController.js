@@ -19,6 +19,20 @@ const { isValidURL } = require("../../../utils/validators");
  */
 const addWebsite = async (req, res, next) => {
   try {
+    // Check website limit for user
+    const canAddWebsite = await websiteService.checkWebsiteLimit(
+      req.user.id,
+      req.user.accountType
+    );
+    if (!canAddWebsite) {
+      const limit = req.user.accountType === "premium" ? 100 : 5;
+      return next(
+        ApiError.forbidden(
+          `You have reached the limit of ${limit} websites. Please upgrade to premium to monitor more websites.`
+        )
+      );
+    }
+
     // Validate URL format
     if (!isValidURL(req.body.url)) {
       return next(
@@ -270,19 +284,33 @@ const deleteWebsite = async (req, res, next) => {
       );
     }
 
-    // Delete the scheduled ping job
-    await deleteScheduledJob(website.url);
+    try {
+      // Delete the scheduled ping job
+      await deleteScheduledJob(website.url);
+    } catch (error) {
+      console.warn(
+        `Failed to delete scheduled job for ${website.url}: ${error.message}`
+      );
+      // Continue with deletion even if job deletion fails
+    }
 
     // Delete the website from database
-    await websiteService.deleteWebsite(req.params.id);
+    const result = await websiteService.deleteWebsite(req.params.id);
 
     // Delete all associated logs
-    await logService.deleteLogs({ url: website.url });
+    try {
+      await logService.deleteLogs({ url: website.url });
+    } catch (error) {
+      console.warn(
+        `Failed to delete logs for ${website.url}: ${error.message}`
+      );
+      // Continue even if log deletion fails
+    }
 
     return res
       .status(httpStatus.OK)
       .json(
-        new ApiResponse(httpStatus.OK, null, "Website deleted successfully")
+        new ApiResponse(httpStatus.OK, result, "Website deleted successfully")
       );
   } catch (error) {
     next(error);
@@ -570,6 +598,7 @@ const calculateAvailabilityPercentage = (logs, timeRange, pingInterval) => {
   // Calculate availability percentage
   return Math.round((successfulChecks / expectedChecks) * 100);
 };
+
 /**
  * Immediately ping a website
  * @param {Object} req - Express request object

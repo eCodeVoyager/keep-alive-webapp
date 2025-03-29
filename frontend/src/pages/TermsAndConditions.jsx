@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Shield, ScrollText } from "lucide-react";
+import SEO from "../components/Shared/SEO";
 
 const TermsAndConditions = () => {
   const sections = [
@@ -47,65 +48,74 @@ const TermsAndConditions = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="container mx-auto px-4 py-20"
-      >
-        <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0.5 }}
-            animate={{ scale: 1 }}
-            className="inline-block mb-6"
-          >
-            <ScrollText className="w-16 h-16 text-green-400" />
-          </motion.div>
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Terms and Conditions
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Please read these terms carefully before using Keep-Alive services.
-            Last updated: October 24, 2024
-          </p>
-        </div>
-
+    <>
+      <SEO
+        title="Terms and Conditions"
+        description="Read Server's terms and conditions to understand our service usage policies, user responsibilities, and account management rules."
+        keywords="terms and conditions, Server terms, service agreement, user agreement, website monitoring terms"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="max-w-4xl mx-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="container mx-auto px-4 py-20"
         >
-          {sections.map((section, index) => (
+          <div className="text-center mb-12">
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * index }}
-              className="bg-gray-800 rounded-xl p-6 mb-6 shadow-lg"
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              className="inline-block mb-6"
             >
-              <h2 className="text-xl font-semibold text-white mb-3">
-                {section.title}
-              </h2>
-              <p className="text-gray-300 leading-relaxed">{section.content}</p>
+              <ScrollText className="w-16 h-16 text-green-400" />
             </motion.div>
-          ))}
-
-          <div className="mt-12 text-center">
-            <p className="text-gray-400 mb-6">
-              If you have any questions about these terms, please contact us.
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Terms and Conditions
+            </h1>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Please read these terms carefully before using Keep-Alive
+              services. Last updated: October 24, 2024
             </p>
-            <Link
-              to="/contact"
-              className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center"
-            >
-              Contact Support
-              <Shield className="w-5 h-5 ml-2" />
-            </Link>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="max-w-4xl mx-auto"
+          >
+            {sections.map((section, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index }}
+                className="bg-gray-800 rounded-xl p-6 mb-6 shadow-lg"
+              >
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  {section.title}
+                </h2>
+                <p className="text-gray-300 leading-relaxed">
+                  {section.content}
+                </p>
+              </motion.div>
+            ))}
+
+            <div className="mt-12 text-center">
+              <p className="text-gray-400 mb-6">
+                If you have any questions about these terms, please contact us.
+              </p>
+              <Link
+                to="/contact"
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center"
+              >
+                Contact Support
+                <Shield className="w-5 h-5 ml-2" />
+              </Link>
+            </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    </>
   );
 };
 
