@@ -7,6 +7,7 @@ const SidebarLink = ({ icon, label, isOpen, isActive, to, onLinkClick }) => (
     className={`
       flex items-center text-gray-400 hover:text-white
       py-3 px-4 rounded-lg transition-all duration-300
+      ${isOpen ? "justify-start" : "justify-center"}
       ${
         isActive
           ? "bg-gradient-to-r from-green-500 to-blue-500 text-white"
